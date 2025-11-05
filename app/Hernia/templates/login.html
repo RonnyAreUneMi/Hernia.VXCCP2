@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - HERN.IA</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="icon" href="{% static 'images/logo-hernia.png' %}">
+    <style>
+        body {
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body.dark {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        body:not(.dark) {
+            background: #ffffff;
+        }
+
+        .card {
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        body.dark .card {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(71, 85, 105, 0.3);
+        }
+
+        .input-field {
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        body.dark .input-field {
+            background-color: rgba(15, 23, 42, 0.5);
+            border-color: rgba(71, 85, 105, 0.5);
+            color: #e2e8f0;
+        }
+
+        body.dark .input-field:focus {
+            background-color: rgba(15, 23, 42, 0.7);
+            border-color: #3b82f6;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        body.dark .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        body.dark .btn-primary:hover {
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .logo-glow {
+            filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .logo-glow:hover {
+            filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.5));
+            transform: scale(1.05);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: rgba(203, 213, 225, 0.8);
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .overlay.show {
+            display: flex;
+        }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body.dark .text-gray-800 {
+            color: #f1f5f9 !important;
+        }
+
+        body.dark .text-gray-600 {
+            color: #cbd5e1 !important;
+        }
+
+        body.dark .text-gray-700 {
+            color: #e2e8f0 !important;
+        }
+
+        /* Iconos del toggle en modo oscuro */
+        body.dark svg {
+            color: #ffffff !important;
+        }
+
+        /* Copyright en modo oscuro */
+        body.dark .text-center .text-gray-600 {
+            color: #ffffff !important;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) {
+            top: 10%;
+            left: 10%;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation-delay: 0s;
+        }
+
+        .shape:nth-child(2) {
+            top: 60%;
+            right: 10%;
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+            animation-delay: 5s;
+        }
+
+        .shape:nth-child(3) {
+            bottom: 20%;
+            left: 20%;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: 41% 59% 41% 59% / 41% 59% 41% 59%;
+            animation-delay: 10s;
+        }
+
+        body.dark .shape:nth-child(1) {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+
+        body.dark .shape:nth-child(2) {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        }
+
+        body.dark .shape:nth-child(3) {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(30px, -30px) rotate(120deg);
+            }
+            66% {
+                transform: translate(-20px, 20px) rotate(240deg);
+            }
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <!-- Formas flotantes decorativas -->
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Toggle de modo oscuro -->
+    <div class="fixed top-6 right-6 z-50 flex items-center space-x-3">
+        <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+        </svg>
+        <div class="toggle-switch" id="darkModeToggle" onclick="toggleDarkMode()">
+            <div class="toggle-slider"></div>
+        </div>
+        <svg class="w-5 h-5 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+        </svg>
+    </div>
+
+    <!-- Contenedor principal -->
+    <div class="content-wrapper w-full max-w-md">
+        <div class="card rounded-2xl shadow-2xl p-8">
+            <!-- Logo y título -->
+            <div class="text-center mb-8">
+                <div class="flex justify-center mb-4">
+                    <img src="{% static 'images/logo-hernia.png' %}" alt="HERN.IA Logo" class="h-20 w-20 logo-glow">
+                </div>
+                <h1 class="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                    HERN.IA
+                </h1>
+                <p class="text-gray-600 text-sm">Sistema Médico Inteligente</p>
+            </div>
+
+            <!-- Formulario -->
+            <form method="post" action="{% url 'login' %}" id="loginForm" class="space-y-6">
+                {% csrf_token %}
+                
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        Correo Electrónico
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"></path>
+                            </svg>
+                        </div>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required 
+                            placeholder="correo@ejemplo.com"
+                            class="input-field w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                    </div>
+                </div>
+
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                        Contraseña
+                    </label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required 
+                            placeholder="••••••••"
+                            class="input-field w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="btn-primary w-full py-3 text-white font-semibold rounded-lg focus:outline-none focus:ring-4 focus:ring-blue-300"
+                >
+                    Iniciar Sesión
+                </button>
+            </form>
+
+            <!-- Enlaces adicionales -->
+            <div class="mt-6 text-center space-y-3">
+                <a href="{% url 'password_reset' %}" class="block text-sm text-blue-600 hover:text-blue-700 hover:underline transition-colors">
+                    ¿Olvidaste tu contraseña?
+                </a>
+                <div class="pt-4 border-t border-gray-200">
+                    <p class="text-sm text-gray-600 mb-2">¿No tienes una cuenta?</p>
+                    <a href="{% url 'register' %}" class="inline-block text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline transition-colors">
+                        Regístrate aquí
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Texto de copyright -->
+        <div class="text-center mt-6">
+            <p class="text-sm text-gray-600 opacity-80">© 2024 HERN.IA - Todos los derechos reservados</p>
+        </div>
+    </div>
+
+    <!-- Overlay de carga -->
+    <div class="overlay" id="loadingScreen">
+        <div class="text-center text-white">
+            <div class="loader mx-auto mb-6"></div>
+            <h2 class="text-2xl font-semibold mb-2">Iniciando sesión...</h2>
+            <p class="text-gray-300">Por favor, espere mientras verificamos sus credenciales.</p>
+        </div>
+    </div>
+
+    <script>
+        // Función de modo oscuro
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const toggle = document.getElementById('darkModeToggle');
+            toggle.classList.toggle('active');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar preferencia de modo oscuro
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            const toggle = document.getElementById('darkModeToggle');
+            
+            if (darkMode) {
+                document.body.classList.add('dark');
+                toggle.classList.add('active');
+            }
+
+            // Manejar envío del formulario
+            const loginForm = document.getElementById('loginForm');
+            const loadingScreen = document.getElementById('loadingScreen');
+        
+            loginForm.addEventListener('submit', function() {
+                loadingScreen.classList.add('show');
+            });
+        
+            // Mostrar mensajes de error
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'error' %}
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error de autenticación',
+                            text: '{{ message }}',
+                            confirmButtonColor: '#3b82f6',
+                            background: document.body.classList.contains('dark') ? '#1e293b' : '#ffffff',
+                            color: document.body.classList.contains('dark') ? '#f1f5f9' : '#1f2937'
+                        });
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
+</body>
+</html>

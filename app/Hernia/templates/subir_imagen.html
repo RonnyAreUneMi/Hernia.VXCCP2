@@ -1,0 +1,353 @@
+{% extends 'base.html' %}
+
+{% block title %}Subir Imagen - HERN.IA{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header Card -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 transition-colors duration-300">
+        <div class="flex items-center space-x-4">
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center transition-colors duration-300">
+                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Subir Imagen de Radiografía</h2>
+                <p class="text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">Sube una imagen médica para análisis por IA</p>
+            </div>
+        </div>
+    </div>
+
+    {% load extras %}
+    
+    <!-- Main Form Card -->
+    <form method="POST" enctype="multipart/form-data" id="uploadForm" class="space-y-6">
+        {% csrf_token %}
+        
+        <!-- Patient Information Card -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 transition-colors duration-300">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">Información del Paciente</h3>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label for="paciente_nombre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
+                        Nombre del Paciente <span class="text-red-500">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="paciente_nombre" 
+                        id="paciente_nombre" 
+                        class="w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 transition-colors duration-300" 
+                        placeholder="Ingrese nombre completo"
+                        required
+                    >
+                </div>
+
+                <div>
+                    <label for="titulo" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
+                        Nombre de la Radiografía <span class="text-red-500">*</span>
+                    </label>
+                    {{ form.titulo|add_class:"w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 transition-colors duration-300" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Area Card -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 transition-colors duration-300">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 transition-colors duration-300">Imagen Médica</h3>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Preview Section -->
+                <div class="space-y-4">
+                    <div class="relative group">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700 rounded-lg opacity-0 group-hover:opacity-10 transition-opacity duration-300"></div>
+                        
+                        <!-- Container for preview with fixed aspect ratio for X-rays -->
+                        <div class="relative w-full rounded-lg border-2 border-gray-300 dark:border-slate-600 shadow-md transition-all duration-300 bg-gray-100 dark:bg-slate-700/50 overflow-hidden" style="height: 480px;">
+                            <!-- Placeholder text (shown when no image) -->
+                            <div id="previewPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
+                                <svg class="w-16 h-16 text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <p class="text-lg font-medium text-gray-500 dark:text-gray-400">Aquí verás tu imagen</p>
+                                <p class="text-sm text-gray-400 dark:text-gray-500 mt-2">Selecciona una radiografía para vista previa</p>
+                            </div>
+                            
+                            <!-- Image preview (hidden initially) -->
+                            <img 
+                                id="imagenPreview" 
+                                src="" 
+                                alt="Vista previa" 
+                                class="hidden w-full h-full object-contain"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3 transition-colors duration-300">
+                        <div class="flex items-start space-x-2">
+                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-xs text-blue-800 dark:text-blue-300 transition-colors duration-300">
+                                Vista previa de la imagen seleccionada. Formatos aceptados: JPG, PNG, JPEG
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drag & Drop Section -->
+                <div class="space-y-4">
+                    <div id="dropZone" class="relative border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-8 text-center hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 cursor-pointer bg-gray-50 dark:bg-slate-700/50" style="min-height: 480px; display: flex; align-items: center; justify-content: center;">
+                        <input 
+                            type="file" 
+                            name="imagen" 
+                            id="id_imagen" 
+                            class="hidden" 
+                            accept="image/*"
+                        />
+                        
+                        <div id="dropContent" class="space-y-4 w-full">
+                            <div class="flex justify-center">
+                                <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center transition-colors duration-300">
+                                    <svg class="w-8 h-8 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <p class="text-gray-700 dark:text-gray-300 font-medium transition-colors duration-300">
+                                    Arrastra y suelta tu imagen aquí
+                                </p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">
+                                    o haz clic para seleccionar
+                                </p>
+                            </div>
+                            
+                            <button 
+                                type="button" 
+                                onclick="document.getElementById('id_imagen').click()"
+                                class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+                            >
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                                </svg>
+                                Seleccionar Archivo
+                            </button>
+                        </div>
+
+                        <div id="fileInfo" class="hidden space-y-3 w-full">
+                            <div class="flex justify-center">
+                                <div class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center transition-colors duration-300">
+                                    <svg class="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-gray-700 dark:text-gray-300 font-medium transition-colors duration-300" id="fileName"></p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300" id="fileSize"></p>
+                            </div>
+                            <button 
+                                type="button" 
+                                id="changeFile"
+                                class="inline-flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-800 dark:text-gray-200 font-medium rounded-lg transition-all duration-200"
+                            >
+                                Cambiar Imagen
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="error-message" class="hidden bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 transition-colors duration-300">
+                        <div class="flex items-start space-x-2">
+                            <svg class="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <p class="text-sm text-red-800 dark:text-red-300 transition-colors duration-300" id="errorText"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-end">
+            <a 
+                href="{% url 'index' %}" 
+                class="inline-flex items-center justify-center px-6 py-3 bg-gray-200 hover:bg-gray-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-gray-800 dark:text-gray-200 font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Regresar
+            </a>
+            
+            <button 
+                type="submit" 
+                id="submitBtn"
+                class="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <span id="btnText">Subir Imagen</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/app/Hernia/static/js/subir_imagen.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('id_imagen');
+    const imagePreview = document.getElementById('imagenPreview');
+    const previewPlaceholder = document.getElementById('previewPlaceholder');
+    const dropContent = document.getElementById('dropContent');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const changeFileBtn = document.getElementById('changeFile');
+    const errorMessage = document.getElementById('error-message');
+    const errorText = document.getElementById('errorText');
+    const submitBtn = document.getElementById('submitBtn');
+    const btnText = document.getElementById('btnText');
+    const uploadForm = document.getElementById('uploadForm');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    // Highlight drop zone when dragging over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.add('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, () => {
+            dropZone.classList.remove('border-blue-500', 'bg-blue-50', 'dark:bg-blue-900/20');
+        }, false);
+    });
+
+    // Handle dropped files
+    dropZone.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length > 0) {
+            fileInput.files = files;
+            handleFiles(files[0]);
+        }
+    });
+
+    // Handle file selection via input
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            handleFiles(e.target.files[0]);
+        }
+    });
+
+    // Handle click on drop zone
+    dropZone.addEventListener('click', function(e) {
+        if (!e.target.closest('button') && !fileInfo.classList.contains('hidden')) {
+            return;
+        }
+        if (e.target.id !== 'changeFile' && e.target.closest('#changeFile') === null) {
+            fileInput.click();
+        }
+    });
+
+    // Change file button
+    changeFileBtn.addEventListener('click', function() {
+        fileInput.click();
+    });
+
+    function handleFiles(file) {
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!validTypes.includes(file.type)) {
+            showError('Por favor, selecciona un archivo de imagen válido (JPG, PNG)');
+            return;
+        }
+
+        // Validate file size (max 10MB)
+        const maxSize = 10 * 1024 * 1024;
+        if (file.size > maxSize) {
+            showError('El archivo es demasiado grande. Tamaño máximo: 10MB');
+            return;
+        }
+
+        hideError();
+
+        // Show file info
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        dropContent.classList.add('hidden');
+        fileInfo.classList.remove('hidden');
+
+        // Preview image
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imagePreview.src = e.target.result;
+            imagePreview.classList.remove('hidden');
+            previewPlaceholder.classList.add('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+    }
+
+    function showError(message) {
+        errorText.textContent = message;
+        errorMessage.classList.remove('hidden');
+        setTimeout(() => {
+            hideError();
+        }, 5000);
+    }
+
+    function hideError() {
+        errorMessage.classList.add('hidden');
+    }
+
+    // Form submission
+    uploadForm.addEventListener('submit', function(e) {
+        const pacienteNombre = document.getElementById('paciente_nombre').value.trim();
+        const titulo = document.querySelector('[name="titulo"]').value.trim();
+
+        if (!pacienteNombre || !titulo) {
+            e.preventDefault();
+            showError('Por favor, completa todos los campos obligatorios');
+            return;
+        }
+
+        if (fileInput.files.length === 0) {
+            e.preventDefault();
+            showError('Por favor, selecciona una imagen antes de subir');
+            return;
+        }
+
+        // Disable submit button and show loading state
+        submitBtn.disabled = true;
+        btnText.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Subiendo...';
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Perfil{% endblock %}
+
+{% block content %}
+<div class="container mx-auto mt-10 p-4 bg-white bg-opacity-50 backdrop-filter backdrop-blur-md shadow-md rounded-lg">
+    <h1 class="text-3xl font-bold text-gray-1000 text-center mb-6">Editar Perfil</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Datos del Usuario -->
+            <div class="border border-gray-1000 p-4 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold text-gray-1000 text-center mb-4">Datos del Usuario</h2>
+
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-1000 font-semibold mb-2">Nombre de Usuario</label>
+                    <input type="text" id="username" name="username" value="{{ user_form.username.value|default_if_none:'' }}" class="w-full p-2 border border-gray-700 rounded" oninput="this.value = this.value.replace(/[0-9]/g, '');">
+                </div>                
+
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-1000 font-semibold mb-2">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" value="{{ user_form.email.value|default_if_none:'' }}" class="w-full p-2 border border-gray-1000 rounded">
+                    {% if user_form.email.errors %}
+                        <div class="text-red-500 text-sm">
+                            {{ user_form.email.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-4">
+                    <label for="address" class="block text-gray-1000 font-semibold mb-2">Dirección</label>
+                    <input type="text" id="address" name="address" value="{{ profile_form.address.value|default_if_none:'' }}" class="w-full p-2 border border-gray-1000 rounded">
+                </div>
+
+                <div class="mb-4">
+                    <label for="phone_number" class="block text-gray-1000 font-semibold mb-2">Número Telefónico</label>
+                    <input type="text" id="phone_number" name="phone_number" value="{{ profile_form.phone_number.value|default_if_none:'' }}" pattern="^09\d{8}$" title="El número de celular debe tener 10 dígitos y empezar con 09." class="w-full p-2 border border-gray-1000 rounded" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                </div>                
+
+                <div class="mb-4">
+                    <label for="cedula" class="block text-gray-1000 font-semibold mb-2">Número de Cédula</label>
+                    <input type="text" id="cedula" name="cedula" value="{{ profile_form.cedula.value|default_if_none:'' }}" pattern="^[0-9]{10}$" class="w-full p-2 border border-gray-1000 rounded" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    
+                    {% if profile_form.cedula.errors %}
+                        <div class="text-red-500 text-sm">
+                            {{ profile_form.cedula.errors }}
+                        </div>
+                    {% endif %}
+                </div>                
+                
+            </div>
+
+            <!-- Imagen de Perfil -->
+            <div class="border border-gray-1000 p-4 rounded-lg shadow-sm">
+                <h2 class="text-xl font-semibold text-gray-1000 text-center mb-4">Foto de Perfil</h2>
+                <div class="mb-4 flex justify-center">
+                    {% if user.profile.profile_image %}
+                        <img src="{{ user.profile.profile_image.url }}" alt="Foto de Perfil" class="w-32 h-32 rounded-full object-cover">
+                    {% else %}
+                        <img src="/app/Hernia/static/images/usuario-logo2.png" alt="Imagen por Defecto" class="w-32 h-32 rounded-full object-cover">
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="profile_image" class="block text-gray-1000 font-semibold mb-2">Subir Nueva Foto de Perfil</label>
+                    <input type="file" id="profile_image" name="profile_image" accept="image/*" class="w-full p-2 border border-gray-1000 rounded">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center mt-6 space-x-4">
+            <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                Guardar Cambios
+            </button>
+            <a href="{% url 'profile' %}" class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

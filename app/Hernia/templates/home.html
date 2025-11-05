@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inicio - HERN.IA{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+    <!-- Hero Section -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors duration-300">
+        <div class="grid md:grid-cols-2 gap-8 p-8 md:p-10">
+            <div class="flex flex-col justify-center space-y-5">
+                <div class="inline-flex items-center space-x-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-4 py-2 rounded-full w-fit transition-colors duration-300">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
+                    <span class="text-sm font-semibold">Tecnología de Vanguardia</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight transition-colors duration-300">
+                    Detección Inteligente de
+                    <span class="bg-gradient-to-r from-blue-600 to-blue-500 dark:from-blue-400 dark:to-blue-300 bg-clip-text text-transparent">Hernias</span>
+                </h1>
+                
+                <p class="text-lg text-gray-600 dark:text-gray-300 transition-colors duration-300">
+                    Sistema avanzado de diagnóstico por inteligencia artificial para la detección precisa y temprana de hernias.
+                </p>
+                
+                <div class="flex flex-wrap gap-4">
+                    <a href="{% url 'subir_imagen' %}" class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        Iniciar Escaneo
+                    </a>
+                    
+                    <a href="{% url 'resultados' %}" class="inline-flex items-center px-6 py-3 bg-slate-200 hover:bg-slate-300 dark:bg-slate-600 dark:hover:bg-slate-500 text-slate-900 dark:text-slate-50 font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Ver Resultados
+                    </a>
+                </div>
+            </div>
+            
+            <div class="flex items-center justify-center">
+                <div class="relative">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-400 to-blue-600 dark:from-blue-500 dark:to-blue-700 rounded-2xl transform rotate-3 opacity-20"></div>
+                    <img src="{% static 'images/logo-hernia.png' %}" alt="Sistema HERN.IA" class="relative w-full max-w-md rounded-2xl shadow-2xl">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Grid + Quick Actions Combined -->
+    <div class="grid md:grid-cols-3 gap-5">
+        <!-- Feature 1 -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-lg transition-all duration-300">
+            <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300">
+                <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300">Detección por IA</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">Análisis automatizado mediante inteligencia artificial para identificar patrones con alta precisión.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-lg transition-all duration-300">
+            <div class="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300">
+                <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300">Resultados Precisos</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">Diagnósticos detallados con porcentajes de confianza y clasificación por tipo de hernia.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-6 hover:shadow-lg transition-all duration-300">
+            <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4 transition-colors duration-300">
+                <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 transition-colors duration-300">Reportes en PDF</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">Genera informes profesionales en formato PDF con toda la información del diagnóstico.</p>
+        </div>
+    </div>
+
+    <!-- How It Works - Más compacto -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-8 transition-all duration-300">
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center transition-colors duration-300">Cómo Funciona</h2>
+        
+        <div class="grid md:grid-cols-4 gap-5">
+            <div class="text-center space-y-3">
+                <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto transition-colors duration-300">
+                    <span class="text-xl font-bold text-blue-600 dark:text-blue-400">1</span>
+                </div>
+                <h3 class="text-base font-semibold text-gray-900 dark:text-white transition-colors duration-300">Subir Imagen</h3>
+                <p class="text-xs text-gray-600 dark:text-gray-400 transition-colors duration-300">Carga la imagen médica de forma segura</p>
+            </div>
+
+            <div class="text-center space-y-3">
+                <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto transition-colors duration-300">
+                    <span class="text-xl font-bold text-blue-600 dark:text-blue-400">2</span>
+                </div>
+                <h3 class="text-base font-semibold text-gray-900 dark:text-white transition-colors duration-300">Análisis IA</h3>
+                <p class="text-xs text-gray-600 dark:text-gray-400 transition-colors duration-300">La IA procesa y analiza la imagen</p>
+            </div>
+
+            <div class="text-center space-y-3">
+                <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto transition-colors duration-300">
+                    <span class="text-xl font-bold text-blue-600 dark:text-blue-400">3</span>
+                </div>
+                <h3 class="text-base font-semibold text-gray-900 dark:text-white transition-colors duration-300">Ver Resultados</h3>
+                <p class="text-xs text-gray-600 dark:text-gray-400 transition-colors duration-300">Obtén diagnóstico con estadísticas</p>
+            </div>
+
+            <div class="text-center space-y-3">
+                <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto transition-colors duration-300">
+                    <span class="text-xl font-bold text-blue-600 dark:text-blue-400">4</span>
+                </div>
+                <h3 class="text-base font-semibold text-gray-900 dark:text-white transition-colors duration-300">Generar PDF</h3>
+                <p class="text-xs text-gray-600 dark:text-gray-400 transition-colors duration-300">Descarga el informe completo</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions - Más compacto -->
+    <div class="grid md:grid-cols-2 gap-5">
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 transition-all duration-300 hover:shadow-lg">
+            <div class="flex items-start space-x-4">
+                <div class="w-11 h-11 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-300">
+                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1 transition-colors duration-300">Historial Médico</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 transition-colors duration-300">Accede a todos tus análisis previos</p>
+                    <a href="{% url 'historial_med' %}" class="inline-flex items-center text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors duration-200">
+                        Ver historial
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 p-5 transition-all duration-300 hover:shadow-lg">
+            <div class="flex items-start space-x-4">
+                <div class="w-11 h-11 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-300">
+                    <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-base font-semibold text-gray-900 dark:text-white mb-1 transition-colors duration-300">Asistente IA</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-3 transition-colors duration-300">Consulta con nuestro chatbot inteligente</p>
+                    <button id="chatbotBtnHome" class="inline-flex items-center text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-medium transition-colors duration-200">
+                        Iniciar chat
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer compacto -->
+    <footer class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 transition-all duration-300">
+        <div class="px-6 py-3">
+            <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
+                <div class="flex items-center space-x-3">
+                    <img src="{% static 'images/logo-hernia.png' %}" alt="Logo" class="h-7 w-7">
+                    <div>
+                        <p class="text-sm font-semibold text-gray-900 dark:text-white transition-colors duration-300">HERN.IA Sistema Médico</p>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-300">Detección inteligente de hernias</p>
+                    </div>
+                </div>
+                
+                <div class="text-center md:text-right">
+                    <p class="text-xs text-gray-600 dark:text-gray-400 flex items-center justify-center md:justify-end space-x-2 transition-colors duration-300">
+                        <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>
+                        <span>Product by <span class="font-semibold text-blue-600 dark:text-blue-400">ANDRES JG</span></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chatbotBtnHome = document.getElementById('chatbotBtnHome');
+    const chatbotBtn = document.getElementById('chatbotBtn');
+    
+    if (chatbotBtnHome) {
+        chatbotBtnHome.addEventListener('click', function() {
+            if (chatbotBtn) {
+                chatbotBtn.click();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

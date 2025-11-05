@@ -1,0 +1,106 @@
+/* Fondo para todo el body */
+body {
+    background-image: url('/app/Hernia/static/images/fondo_login.jpg'); /* Ruta de la imagen de fondo */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Modo oscuro */
+.dark-mode {
+    background-color: #2d3748 !important;
+    color: #f7fafc !important;
+}
+
+.dark-mode p,
+.dark-mode h2,
+.dark-mode h3 {
+    color: #ffffff !important;
+}
+
+/* Estilo específico para los inputs en modo oscuro */
+.dark-mode input,
+.dark-mode textarea {
+    background-color: #4a5568 !important; /* Fondo oscuro para inputs */
+    border-color: #2d3748 !important;
+    color: #ffffff !important; /* Texto blanco en inputs */
+}
+
+/* Estilo específico para los campos de formulario */
+.dark-mode .bg-white {
+    background-color: #4a5568 !important;
+    color: #f7fafc !important;
+}
+
+/* Modo claro */
+.light-mode input,
+.light-mode textarea {
+    background-color: #ffffff;
+    border-color: #e2e8f0;
+    color: #1a202c;
+}
+
+/* Estilo para el menú desplegable en modo oscuro */
+.dark-mode .dropdown-menu {
+    background-color: #4a5568 !important;
+    color: #f7fafc !important;
+}
+
+.dark-mode .dropdown-menu a {
+    color: #f7fafc !important;
+}
+
+.dark-mode .dropdown-menu a:hover {
+    background-color: #2d3748 !important;
+}
+
+/* Transición suave para los cambios de modo */
+.module-card {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Estilos para el interruptor */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px; /* Ajusta el ancho del interruptor */
+    height: 34px; /* Ajusta la altura del interruptor */
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 50px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px; /* Ajusta el tamaño del círculo deslizante */
+    width: 26px; /* Ajusta el tamaño del círculo deslizante */
+    border-radius: 50%;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #4a5568;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px); /* Ajusta la distancia de desplazamiento del círculo */
+}
