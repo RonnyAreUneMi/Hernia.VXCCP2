@@ -27,8 +27,6 @@ Este proyecto es una aplicación web desarrollada con Django, diseñada para asi
 6.  **Actualización de Almacenamiento:** La imagen procesada con las marcas visuales se guarda de nuevo en Amazon S3.
 7.  **Creación de Historial:** Se crea un registro en la base de datos con toda la información del análisis: usuario, paciente, diagnóstico, confianza y la URL de la imagen procesada.
 8.  **Visualización para el Usuario:** El usuario es redirigido a una página de resultados donde puede ver la imagen analizada y el diagnóstico final.
-
-<p align="center">
 ```mermaid
 flowchart TD
     %% Definición de Estilos para los Nodos
@@ -56,7 +54,6 @@ flowchart TD
     class C,F serviceStyle
     class G dbStyle
 ```
-</p>
 
 ## Tecnologías Utilizadas
 
@@ -103,7 +100,6 @@ cd proy_medicinea_ctual
 
 ### 3. Configurar el Entorno Virtual e Instalar Dependencias
 Se recomienda crear un archivo `requirements.txt` con las dependencias del proyecto.
-
 ```bash
 # Crear y activar el entorno virtual
 python -m venv ent_med
@@ -115,14 +111,13 @@ pip install -r requirements.txt
 
 ### 4. Configurar la Base de Datos
 1.  Crea una base de datos en PostgreSQL para el proyecto.
-    ```sql
+```sql
     CREATE DATABASE "Proy_Med";
-    ```
+```
 2.  Asegúrate de que las credenciales en `proy_medical/settings.py` coincidan con tu configuración de PostgreSQL.
 
 ### 5. Variables de Entorno
 Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
-
 ```env
 # Clave secreta de Django (generar una nueva para producción)
 SECRET_KEY='django-insecure-lf+4rw$t9bm$od010h(n(dhv_bhgj$y&!zjm2=kln1h))8p$sa'
