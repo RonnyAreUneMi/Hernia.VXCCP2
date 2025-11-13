@@ -26,8 +26,7 @@ from .models import Imagen, Profile, Historial
 from .services import (
     ImageProcessingService, 
     HistorialService, 
-    ImageValidator,
-    get_inference_client
+    ImageValidator
 )
 from .auth_service import AuthenticationService
 from .pdf_service import InformeRadiologicoGenerator, HistorialGeneralGenerator
@@ -461,3 +460,4 @@ def generar_pdf_general(request):
         logger.error(f"Error generando PDF general: {str(e)}")
         messages.error(request, 'Error al generar el PDF.')
         return redirect('historial_med')
+

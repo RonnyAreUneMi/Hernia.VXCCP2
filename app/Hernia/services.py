@@ -24,19 +24,22 @@ from django.db import transaction
 
 from .models import Imagen, Historial
 
+from ultralytics import YOLO
+
+
 logger = logging.getLogger(__name__)
 
 # ==================== CONFIGURACIÓN ====================
-def get_inference_client():
-    """Obtiene el cliente de inferencia configurado."""
-    api_key = settings.ROBOFLOW_API_KEY
-    if not api_key:
-        raise ValueError("ROBOFLOW_API_KEY no está configurada en settings")
+# def get_inference_client():
+#     """Obtiene el cliente de inferencia configurado."""
+#     api_key = settings.ROBOFLOW_API_KEY
+#     if not api_key:
+#         raise ValueError("ROBOFLOW_API_KEY no está configurada en settings")
     
-    return InferenceHTTPClient(
-        api_url="https://outline.roboflow.com",
-        api_key=api_key
-    )
+#     return InferenceHTTPClient(
+#         api_url="https://outline.roboflow.com",
+#         api_key=api_key
+#     )
 
 
 # ==================== SERVICIOS DE IMAGEN ====================
@@ -77,51 +80,177 @@ class ImageProcessingService:
     
     @staticmethod
     def get_inference_result(image_url: str) -> Optional[Dict]:
-        """Obtiene el resultado de inferencia del modelo."""
+        """
+        Obtiene el resultado de inferencia usando el modelo YOLO local.
+        """
         try:
-            client = get_inference_client()
-            result = client.infer(image_url, model_id=ImageProcessingService.MODEL_ID)
-            return result
+            model_path = os.path.join(settings.BASE_DIR, 'app', 'Hernia', 'yolo', 'best.pt')
+
+            if not os.path.exists(model_path):
+                logger.error(f"❌ No se encontró el modelo YOLO en: {model_path}")
+                return None
+
+            if not hasattr(ImageProcessingService, '_model'):
+                ImageProcessingService._model = YOLO(model_path)
+
+            model = ImageProcessingService._model
+
+            if image_url.startswith('http'):
+                import requests, tempfile
+                response = requests.get(image_url, stream=True)
+                response.raw.decode_content = True
+                temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+                with open(temp_file.name, 'wb') as f:
+                    f.write(response.content)
+                image_path = temp_file.name
+            else:
+                image_path = os.path.join(settings.BASE_DIR, image_url.lstrip('/'))
+
+            results = model(image_path)
+
+            predictions = []
+            for box in results[0].boxes:
+                predictions.append({
+                    'class': model.names[int(box.cls)],
+                    'confidence': float(box.conf),
+                    'bbox': box.xyxy[0].tolist()
+                })
+
+            return {'predictions': predictions}
+
         except Exception as e:
-            logger.error(f"Error en inferencia: {str(e)}")
+            logger.error(f"Error en inferencia con YOLO: {str(e)}")
             return None
+
     
     @staticmethod
     def draw_predictions_on_image(img_cv2: np.ndarray, predictions: list) -> np.ndarray:
-        """Dibuja las predicciones en la imagen."""
+        output = img_cv2.copy()
+        img_height, img_width = img_cv2.shape[:2]
+        
+        colors = {
+            'l1': (0, 165, 255),      # Naranja
+            'l2': (0, 200, 255),      # Amarillo-naranja
+            'l3': (0, 255, 200),      # Amarillo-verde
+            'l4': (100, 255, 100),    # Verde claro
+            'l5': (200, 255, 0),      # Cyan
+            's1': (255, 150, 100),    # Azul claro
+            'hernia': (0, 0, 255),    # Rojo
+            'sin hernia': (0, 255, 0) # Verde
+        }
+        
+        def hay_overlap(box1, box2, threshold=0.1):
+            x1_min, y1_min, x1_max, y1_max = box1
+            x2_min, y2_min, x2_max, y2_max = box2
+            
+            x_left = max(x1_min, x2_min)
+            y_top = max(y1_min, y2_min)
+            x_right = min(x1_max, x2_max)
+            y_bottom = min(y1_max, y2_max)
+            
+            if x_right < x_left or y_bottom < y_top:
+                return False
+            
+            intersection_area = (x_right - x_left) * (y_bottom - y_top)
+            box1_area = (x1_max - x1_min) * (y1_max - y1_min)
+            box2_area = (x2_max - x2_min) * (y2_max - y2_min)
+            
+            iou = intersection_area / min(box1_area, box2_area)
+            return iou > threshold
+        
+        detections = []
         for pred in predictions:
             try:
+                x1, y1, x2, y2 = map(int, pred.get('bbox', [0, 0, 0, 0]))
                 confidence = pred.get('confidence', 0) * 100
-                class_name = pred.get('class', 'Unknown')
+                class_name = pred.get('class', 'Desconocido')
+                detections.append({
+                    'box': (x1, y1, x2, y2),
+                    'class': class_name,
+                    'confidence': confidence
+                })
+            except Exception as e:
+                logger.warning(f"Error procesando predicción: {str(e)}")
+                continue
+        
+        hernias = [d for d in detections if 'hernia' in d['class'].lower() and 'sin' not in d['class'].lower()]
+        todas_vertebras = [d for d in detections if d['class'].lower() in ['l1', 'l2', 'l3', 'l4', 'l5', 's1']]
+        vertebras_con_hernia = []
+        for vertebra in todas_vertebras:
+            for hernia in hernias:
+                if hay_overlap(vertebra['box'], hernia['box']):
+                    vertebras_con_hernia.append(vertebra)
+                    break
+        
+        detecciones_a_mostrar = hernias + vertebras_con_hernia
+        
+        for det in detecciones_a_mostrar:
+            try:
+                x1, y1, x2, y2 = det['box']
+                class_name = det['class']
+                class_name_lower = class_name.lower()
+                confidence = det['confidence']
                 
-                if 'points' in pred:
-                    points = np.array(
-                        [[p['x'], p['y']] for p in pred['points']], 
-                        dtype=np.int32
-                    )
-                    
-                    # Overlay semi-transparente
-                    overlay = img_cv2.copy()
-                    cv2.fillPoly(overlay, [points], (0, 0, 255))
-                    alpha = 0.4
-                    cv2.addWeighted(overlay, alpha, img_cv2, 1 - alpha, 0, img_cv2)
-                    
-                    # Contorno y etiqueta
-                    color = (0, 255, 0) if class_name == 'Sin Hernia' else (255, 0, 0)
-                    cv2.polylines(img_cv2, [points], isClosed=True, color=color, thickness=2)
-                    
-                    x_min = min(points[:, 0])
-                    y_min = min(points[:, 1])
-                    text = f"{class_name} {confidence:.2f}%"
-                    cv2.putText(
-                        img_cv2, text, (x_min, y_min - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2
-                    )
+                color = colors.get(class_name_lower, (255, 255, 255))
+                
+                x_center = (x1 + x2) // 2
+                y_center = (y1 + y2) // 2
+                
+                overlay = output.copy()
+                cv2.rectangle(overlay, (x1, y1), (x2, y2), color, -1)
+                alpha = 0.4
+                cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
+                
+                cv2.rectangle(output, (x1, y1), (x2, y2), color, 2)
+                
+                label = f"{class_name} {confidence:.2f}%"
+                font = cv2.FONT_HERSHEY_SIMPLEX
+                font_scale = 0.7
+                font_thickness = 2
+                (text_width, text_height), baseline = cv2.getTextSize(
+                    label, font, font_scale, font_thickness
+                )
+                
+                if 'hernia' in class_name_lower and 'sin' not in class_name_lower:
+                    label_x = x2 + 40
+                    line_start = (x2, y_center)
+                    line_end = (label_x - 10, y_center)
+                else:
+                    label_x = x1 - text_width - 50
+                    line_start = (x1, y_center)
+                    line_end = (label_x + text_width + 10, y_center)
+                
+                label_y = y_center + text_height // 2
+                
+                if label_x < 0:
+                    label_x = 10
+                if label_x + text_width > img_width:
+                    label_x = img_width - text_width - 10
+                
+                cv2.line(output, line_start, line_end, color, 2)
+                
+                cv2.circle(output, line_start, 4, color, -1)
+                
+                padding = 5
+                cv2.rectangle(output,
+                            (label_x - padding, label_y - text_height - padding),
+                            (label_x + text_width + padding, label_y + baseline + padding),
+                            color, -1)
+                
+                cv2.rectangle(output,
+                            (label_x - padding, label_y - text_height - padding),
+                            (label_x + text_width + padding, label_y + baseline + padding),
+                            (0, 0, 0), 2)
+                
+                cv2.putText(output, label, (label_x, label_y),
+                        font, font_scale, (0, 0, 0), font_thickness)
+                
             except Exception as e:
                 logger.warning(f"Error dibujando predicción: {str(e)}")
                 continue
         
-        return img_cv2
+        return output
+
     
     @staticmethod
     def save_processed_image(img_cv2: np.ndarray) -> BytesIO:
@@ -270,3 +399,4 @@ class ImageValidator:
         except Exception as e:
             logger.error(f"Error validando imagen: {str(e)}")
             return False, "Error al validar la imagen"
+
