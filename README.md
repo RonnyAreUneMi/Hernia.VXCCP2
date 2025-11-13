@@ -31,24 +31,30 @@ Este proyecto es una aplicación web desarrollada con Django, diseñada para asi
 <p align="center">
 ```mermaid
 flowchart TD
-    subgraph Usuario
-        A[1. Carga de Imagen] --> B
-        H[8. Visualiza Resultado]
-    end
+    %% Definición de Estilos para los Nodos
+    classDef userStyle fill:#e6fffa,stroke:#00bfa5,stroke-width:2px,color:#000
+    classDef djangoStyle fill:#e3f2fd,stroke:#2196f3,stroke-width:2px,color:#000
+    classDef serviceStyle fill:#fff3e0,stroke:#ff9800,stroke-width:2px,color:#000
+    classDef dbStyle fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px,color:#000
 
-    subgraph "Backend (Django)"
-        B[2. Valida y sube a S3] --> C
-        E[5. Dibuja predicciones] --> F
-        E --> G[7. Guarda en BD]
-    end
+    %% Declaración de Nodos
+    A(1. Usuario carga imagen)
+    B[2. Django: Valida y guarda en S3]
+    C{{3. Roboflow: Realiza inferencia IA}}
+    D[4. Django: Recibe predicciones]
+    E[5. Django: Dibuja resultados en imagen]
+    F{{6. S3: Almacena imagen procesada}}
+    G[(7. PostgreSQL: Guarda registro en BD)]
+    H(8. Usuario visualiza resultado)
 
-    subgraph "Servicios Externos"
-        C[3. Roboflow: Inferencia IA] --> D
-        D[4. Recibe predicciones] --> E
-        F[6. Almacena en S3] --> G
-    end
+    %% Conexiones del Flujo
+    A --> B --> C --> D --> E --> F --> G --> H
 
-    G --> H
+    %% Asignación de Estilos
+    class A,H userStyle
+    class B,D,E djangoStyle
+    class C,F serviceStyle
+    class G dbStyle
 ```
 </p>
 
@@ -145,4 +151,4 @@ python manage.py createsuperuser
 ```bash
 python manage.py runserver
 ```
-La aplicación estará disponible en `http://127.0.0.1:8000`.
+La aplicación estará disponible en el local `http://127.0.0.1:8000`.

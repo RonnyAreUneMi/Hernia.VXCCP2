@@ -62,7 +62,10 @@ ROOT_URLCONF = 'proy_medical.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'app/Hernia/templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,6 +149,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'josegomezxc14@gmail.com'
 EMAIL_HOST_PASSWORD = 'pqyt xrkq nlhf pacn'
+
+# Roboflow API Configuration
+ROBOFLOW_API_KEY = config('ROBOFLOW_API_KEY', default='8HZzIhc5cRGKVeheO0R7')
 
 
 
