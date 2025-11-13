@@ -276,6 +276,12 @@ class InformeRadiologicoGenerator(PDFGenerator):
         self.p.setFillColor(PDFStyles.GRIS_CLARO)
         self.p.drawString(x + 0.45*inch, y - 0.78*inch, f"Confiabilidad del análisis: {historial.porcentaje}%")
         
+        # Mostrar ubicación si está disponible
+        if hasattr(historial, 'ubicacion') and historial.ubicacion and historial.ubicacion != 'No especificada':
+            self.p.setFont("Helvetica", 7)
+            self.p.setFillColor(PDFStyles.GRIS_TEXTO)
+            self.p.drawString(x + 0.45*inch, y - 0.92*inch, historial.ubicacion)
+        
         return y - 1.2*inch
     
     def _draw_confidence_index(self, historial, x, y, width):
@@ -412,10 +418,15 @@ class HistorialGeneralGenerator(PDFGenerator):
         y_pos = self.height - 1.3*inch
         
         # Tabla de información
+        ubicacion_texto = getattr(item, 'ubicacion', 'No especificada')
+        if ubicacion_texto == 'No especificada':
+            ubicacion_texto = 'N/A'
+        
         data = [
             ["Paciente:", item.paciente_nombre, "ID:", str(item.id).zfill(6)],
             ["Médico:", item.user.username, "Fecha:", fecha_local.strftime('%d/%m/%Y %H:%M')],
             ["Diagnóstico:", item.grupo, "Confianza:", f"{item.porcentaje}%"],
+            ["Ubicación:", ubicacion_texto, "", ""],
         ]
         
         table = Table(data, colWidths=[1*inch, 2.5*inch, 0.9*inch, 2.1*inch])

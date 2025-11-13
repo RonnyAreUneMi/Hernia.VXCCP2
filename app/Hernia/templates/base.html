@@ -329,6 +329,18 @@
             background-color: rgba(220, 38, 38, 0.1);
         }
 
+        /* Estilos para el menú desplegable de modelos */
+        .nav-item button {
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item button:focus {
+            outline: none;
+        }
+
         .dropdown-divider {
             border-top: 1px solid #e5e7eb;
         }
@@ -619,12 +631,61 @@ body.dark tbody tr:hover .bg-blue-100 {
             <div class="my-6 border-t divider"></div>
 
             <div class="space-y-1">
-                <button id="chatbotBtn" class="nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg">
+                <a href="{% url 'comparacion' %}" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                     </svg>
-                    <span class="font-medium text-sm">Chatbot IA</span>
-                </button>
+                    <span class="font-medium text-sm">Comparación</span>
+                </a>
+
+                <!-- Menú desplegable de Modelos -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="nav-item flex items-center justify-between w-full px-4 py-3 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <span class="font-medium text-sm">Modelos</span>
+                        </div>
+                        <svg class="w-4 h-4 transition-transform duration-200" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    
+                    <div x-show="open" 
+                         x-transition:enter="transition ease-out duration-200"
+                         x-transition:enter-start="opacity-0 transform scale-95"
+                         x-transition:enter-end="opacity-100 transform scale-100"
+                         x-transition:leave="transition ease-in duration-150"
+                         x-transition:leave-start="opacity-100 transform scale-100"
+                         x-transition:leave-end="opacity-0 transform scale-95"
+                         class="ml-8 mt-2 space-y-1">
+                        
+                        <a href="{% url 'modelo_retinanet' %}" class="nav-item flex items-center space-x-3 px-4 py-2 rounded-lg text-sm">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                            </svg>
+                            <span class="font-medium">RetinaNet</span>
+                        </a>
+                        
+                        <a href="#" class="nav-item flex items-center space-x-3 px-4 py-2 rounded-lg text-sm opacity-50 cursor-not-allowed">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                            </svg>
+                            <span class="font-medium">YOLO</span>
+                            <span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">Próximamente</span>
+                        </a>
+                        
+                        <a href="#" class="nav-item flex items-center space-x-3 px-4 py-2 rounded-lg text-sm opacity-50 cursor-not-allowed">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                            <span class="font-medium">ResNet50</span>
+                            <span class="text-xs bg-gray-200 dark:bg-gray-600 px-2 py-1 rounded">Próximamente</span>
+                        </a>
+                    </div>
+                </div>
 
                 <a href="{% url 'profile' %}" class="nav-item flex items-center space-x-3 px-4 py-3 rounded-lg">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

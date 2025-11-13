@@ -40,7 +40,7 @@ class Historial(models.Model):
     imagen = models.ImageField(upload_to='historial_imagenes/', blank=True, null=True)
     porcentaje = models.FloatField()
     grupo = models.CharField(max_length=255)
-    fecha_imagen = models.DateTimeField(auto_now_add=True)  
+    ubicacion = models.CharField(max_length=500, default='No especificada')  
 
     def __str__(self):
         return f'{self.user.username} - {self.paciente_nombre} - {self.fecha_imagen}'

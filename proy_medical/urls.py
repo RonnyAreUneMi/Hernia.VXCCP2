@@ -28,6 +28,8 @@ urlpatterns = [
     path('editar-perfil/', views.editar_perfil, name='editar_perfil'),
     path('descargar_pdf_general/', views.generar_pdf_general, name='generar_pdf_general'),
     path('generar_pdf_fila/<int:id>/', views.generar_pdf_fila, name='generar_pdf_fila'),
+    path('comparacion/', views.comparacion_view, name='comparacion'),
+    path('modelos/retinanet/', views.modelo_retinanet_view, name='modelo_retinanet'),
     
     # URLs para el restablecimiento de contraseñas
     path('password_reset/', auth_views.PasswordResetView.as_view(

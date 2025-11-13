@@ -29,18 +29,6 @@ from ultralytics import YOLO
 
 logger = logging.getLogger(__name__)
 
-# ==================== CONFIGURACIÓN ====================
-# def get_inference_client():
-#     """Obtiene el cliente de inferencia configurado."""
-#     api_key = settings.ROBOFLOW_API_KEY
-#     if not api_key:
-#         raise ValueError("ROBOFLOW_API_KEY no está configurada en settings")
-    
-#     return InferenceHTTPClient(
-#         api_url="https://outline.roboflow.com",
-#         api_key=api_key
-#     )
-
 
 # ==================== SERVICIOS DE IMAGEN ====================
 class ImageProcessingService:
@@ -122,7 +110,6 @@ class ImageProcessingService:
             logger.error(f"Error en inferencia con YOLO: {str(e)}")
             return None
 
-    
     @staticmethod
     def draw_predictions_on_image(img_cv2: np.ndarray, predictions: list) -> np.ndarray:
         output = img_cv2.copy()
@@ -139,99 +126,61 @@ class ImageProcessingService:
             'sin hernia': (0, 255, 0) # Verde
         }
         
-        def hay_overlap(box1, box2, threshold=0.1):
-            x1_min, y1_min, x1_max, y1_max = box1
-            x2_min, y2_min, x2_max, y2_max = box2
-            
-            x_left = max(x1_min, x2_min)
-            y_top = max(y1_min, y2_min)
-            x_right = min(x1_max, x2_max)
-            y_bottom = min(y1_max, y2_max)
-            
-            if x_right < x_left or y_bottom < y_top:
-                return False
-            
-            intersection_area = (x_right - x_left) * (y_bottom - y_top)
-            box1_area = (x1_max - x1_min) * (y1_max - y1_min)
-            box2_area = (x2_max - x2_min) * (y2_max - y2_min)
-            
-            iou = intersection_area / min(box1_area, box2_area)
-            return iou > threshold
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        base_size = min(img_width, img_height)
+        font_scale = max(0.5, base_size / 1000)
+        font_thickness = max(1, int(font_scale * 2))
         
-        detections = []
         for pred in predictions:
             try:
                 x1, y1, x2, y2 = map(int, pred.get('bbox', [0, 0, 0, 0]))
                 confidence = pred.get('confidence', 0) * 100
                 class_name = pred.get('class', 'Desconocido')
-                detections.append({
-                    'box': (x1, y1, x2, y2),
-                    'class': class_name,
-                    'confidence': confidence
-                })
-            except Exception as e:
-                logger.warning(f"Error procesando predicción: {str(e)}")
-                continue
-        
-        hernias = [d for d in detections if 'hernia' in d['class'].lower() and 'sin' not in d['class'].lower()]
-        todas_vertebras = [d for d in detections if d['class'].lower() in ['l1', 'l2', 'l3', 'l4', 'l5', 's1']]
-        vertebras_con_hernia = []
-        for vertebra in todas_vertebras:
-            for hernia in hernias:
-                if hay_overlap(vertebra['box'], hernia['box']):
-                    vertebras_con_hernia.append(vertebra)
-                    break
-        
-        detecciones_a_mostrar = hernias + vertebras_con_hernia
-        
-        for det in detecciones_a_mostrar:
-            try:
-                x1, y1, x2, y2 = det['box']
-                class_name = det['class']
-                class_name_lower = class_name.lower()
-                confidence = det['confidence']
+                class_lower = class_name.lower()
                 
-                color = colors.get(class_name_lower, (255, 255, 255))
+                color = colors.get(class_lower, (255, 255, 255))
+                label = f"{class_name.upper()} {confidence:.1f}%"
+                (text_width, text_height), baseline = cv2.getTextSize(label, font, font_scale, font_thickness)
                 
-                x_center = (x1 + x2) // 2
-                y_center = (y1 + y2) // 2
-                
-                overlay = output.copy()
-                cv2.rectangle(overlay, (x1, y1), (x2, y2), color, -1)
-                alpha = 0.4
-                cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
-                
-                cv2.rectangle(output, (x1, y1), (x2, y2), color, 2)
-                
-                label = f"{class_name} {confidence:.2f}%"
-                font = cv2.FONT_HERSHEY_SIMPLEX
-                font_scale = 0.7
-                font_thickness = 2
-                (text_width, text_height), baseline = cv2.getTextSize(
-                    label, font, font_scale, font_thickness
-                )
-                
-                if 'hernia' in class_name_lower and 'sin' not in class_name_lower:
-                    label_x = x2 + 40
-                    line_start = (x2, y_center)
-                    line_end = (label_x - 10, y_center)
+                if 'hernia' in class_lower:
+                    # HERNIAS: Rectángulo + etiqueta a la derecha
+                    overlay = output.copy()
+                    cv2.rectangle(overlay, (x1, y1), (x2, y2), color, -1)
+                    alpha = 0.4
+                    cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
+                    cv2.rectangle(output, (x1, y1), (x2, y2), color, 3)
+                    
+                    label_x = x2 + 10
+                    label_y = y1 + (y2 - y1) // 2 + text_height // 2
+                    
+                    if label_x + text_width > img_width:
+                        label_x = img_width - text_width - 10
+                    
+                elif class_lower in ['l1', 'l2', 'l3', 'l4', 'l5', 's1']:
+                    # VÉRTEBRAS: Punto + línea a la izquierda
+                    x_center = (x1 + x2) // 2
+                    y_center = (y1 + y2) // 2
+                    
+                    cv2.circle(output, (x_center, y_center), 6, color, -1)
+                    cv2.circle(output, (x_center, y_center), 6, (0, 0, 0), 2)
+                    
+                    label_x = x1 - text_width - 20
+                    label_y = y_center + text_height // 2
+                    
+                    if label_x < 0:
+                        label_x = 10
+                    
+                    line_end_x = label_x + text_width + 5 if label_x < x_center else label_x - 5
+                    cv2.line(output, (x_center, y_center), (line_end_x, label_y - text_height // 2), color, 2)
+                    
                 else:
-                    label_x = x1 - text_width - 50
-                    line_start = (x1, y_center)
-                    line_end = (label_x + text_width + 10, y_center)
+                    # OTRAS: Rectángulo simple
+                    cv2.rectangle(output, (x1, y1), (x2, y2), color, 2)
+                    label_x = x1
+                    label_y = y1 - 10 if y1 - 10 > text_height else y2 + text_height + 10
                 
-                label_y = y_center + text_height // 2
-                
-                if label_x < 0:
-                    label_x = 10
-                if label_x + text_width > img_width:
-                    label_x = img_width - text_width - 10
-                
-                cv2.line(output, line_start, line_end, color, 2)
-                
-                cv2.circle(output, line_start, 4, color, -1)
-                
-                padding = 5
+                # Dibujar etiqueta
+                padding = 4
                 cv2.rectangle(output,
                             (label_x - padding, label_y - text_height - padding),
                             (label_x + text_width + padding, label_y + baseline + padding),
@@ -242,15 +191,13 @@ class ImageProcessingService:
                             (label_x + text_width + padding, label_y + baseline + padding),
                             (0, 0, 0), 2)
                 
-                cv2.putText(output, label, (label_x, label_y),
-                        font, font_scale, (0, 0, 0), font_thickness)
+                cv2.putText(output, label, (label_x, label_y), font, font_scale, (0, 0, 0), font_thickness)
                 
             except Exception as e:
                 logger.warning(f"Error dibujando predicción: {str(e)}")
                 continue
         
         return output
-
     
     @staticmethod
     def save_processed_image(img_cv2: np.ndarray) -> BytesIO:
@@ -262,21 +209,67 @@ class ImageProcessingService:
         return buffer
     
     @staticmethod
-    def extract_prediction_data(result: Dict) -> Tuple[str, float]:
-        """Extrae datos de predicción del resultado."""
+    def extract_prediction_data(result: Dict) -> Tuple[str, float, str]:
+        """Extrae datos de predicción del resultado con detalles de ubicación."""
         predictions = result.get('predictions', [])
         
         if not predictions:
-            return "Predicción no encontrada", 0.0
+            return "Predicción no encontrada", 0.0, "No se detectaron elementos"
         
-        first_pred = predictions[0]
-        class_prediction = first_pred.get('class', 'Unknown')
-        confidence = first_pred.get('confidence', 0) * 100
+        # Separar hernias y vértebras
+        hernias = [p for p in predictions if 'hernia' in p.get('class', '').lower() and 'sin' not in p.get('class', '').lower()]
+        vertebras = [p for p in predictions if p.get('class', '').lower() in ['l1', 'l2', 'l3', 'l4', 'l5', 's1']]
         
-        grupo = "Sin Hernia" if class_prediction == 'Sin Hernia' else "Hernia"
-        porcentaje = round(confidence, 2)
+        if hernias:
+            # Calcular confianza promedio de hernias
+            confianza_promedio = sum(h.get('confidence', 0) for h in hernias) / len(hernias) * 100
+            
+            # Encontrar vértebras afectadas
+            vertebras_afectadas = []
+            for vertebra in vertebras:
+                v_box = vertebra.get('bbox', [0, 0, 0, 0])
+                for hernia in hernias:
+                    h_box = hernia.get('bbox', [0, 0, 0, 0])
+                    if ImageProcessingService._boxes_overlap(v_box, h_box):
+                        vertebras_afectadas.append(vertebra.get('class', '').upper())
+                        break
+            
+            if vertebras_afectadas:
+                ubicacion = f"Hernia detectada en: {', '.join(set(vertebras_afectadas))}"
+            else:
+                ubicacion = "Hernia detectada - Ubicación no especificada"
+            
+            return "Hernia", round(confianza_promedio, 2), ubicacion
+        else:
+            # Sin hernias detectadas
+            if vertebras:
+                vertebras_detectadas = [v.get('class', '').upper() for v in vertebras]
+                ubicacion = f"Vértebras analizadas: {', '.join(set(vertebras_detectadas))}"
+            else:
+                ubicacion = "Análisis completado sin detecciones específicas"
+            
+            return "Sin Hernia", 95.0, ubicacion
+    
+    @staticmethod
+    def _boxes_overlap(box1, box2, threshold=0.1):
+        """Verifica si dos cajas se superponen."""
+        x1_min, y1_min, x1_max, y1_max = box1
+        x2_min, y2_min, x2_max, y2_max = box2
         
-        return grupo, porcentaje
+        x_left = max(x1_min, x2_min)
+        y_top = max(y1_min, y2_min)
+        x_right = min(x1_max, x2_max)
+        y_bottom = min(y1_max, y2_max)
+        
+        if x_right < x_left or y_bottom < y_top:
+            return False
+        
+        intersection_area = (x_right - x_left) * (y_bottom - y_top)
+        box1_area = (x1_max - x1_min) * (y1_max - y1_min)
+        box2_area = (x2_max - x2_min) * (y2_max - y2_min)
+        
+        iou = intersection_area / min(box1_area, box2_area)
+        return iou > threshold
 
 
 class HistorialService:
@@ -291,7 +284,8 @@ class HistorialService:
         imagen_obj: Imagen,
         paciente_nombre: str,
         grupo: str,
-        porcentaje: float
+        porcentaje: float,
+        ubicacion: str = 'No especificada'
     ) -> Historial:
         """Crea un registro de historial de forma atómica."""
         try:
@@ -304,13 +298,14 @@ class HistorialService:
                 grupo=grupo,
                 paciente_nombre=paciente_nombre,
                 fecha_imagen=fecha_local,
+                ubicacion=ubicacion
             )
             historial.full_clean()
             historial.save()
             
             logger.info(
                 f"Historial creado: ID={historial.id}, "
-                f"Paciente={paciente_nombre}, Grupo={grupo}"
+                f"Paciente={paciente_nombre}, Grupo={grupo}, Ubicación={ubicacion}"
             )
             return historial
         except Exception as e:
@@ -399,4 +394,3 @@ class ImageValidator:
         except Exception as e:
             logger.error(f"Error validando imagen: {str(e)}")
             return False, "Error al validar la imagen"
-

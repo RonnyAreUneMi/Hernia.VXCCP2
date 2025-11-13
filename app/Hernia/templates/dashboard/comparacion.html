@@ -1,0 +1,551 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Comparación de Modelos - HERN.IA{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Comparación de Modelos IA</h2>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">Gráficas interactivas con zoom, pan y descarga</p>
+                </div>
+            </div>
+            
+            <!-- Info -->
+            <div class="text-sm text-gray-500">
+                Usa los controles de cada gráfica para interactuar
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="space-y-6">
+        <!-- Training Loss Chart -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Training Loss</h3>
+                <div id="trainToggles" class="flex items-center space-x-4">
+                    <!-- Toggles específicos para training -->
+                </div>
+            </div>
+            <div id="trainChart" class="h-96 w-full"></div>
+        </div>
+
+        <!-- Validation Loss Chart -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Validation Loss</h3>
+                <div id="valToggles" class="flex items-center space-x-4">
+                    <!-- Toggles específicos para validation -->
+                </div>
+            </div>
+            <div id="valChart" class="h-96 w-full"></div>
+        </div>
+    </div>
+
+    <!-- Summary Tables -->
+    <div class="grid lg:grid-cols-2 gap-6">
+        <!-- Training Summary -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Resumen de Entrenamiento</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200 dark:border-slate-600">
+                            <th class="text-left py-2 text-gray-700 dark:text-gray-300">Modelo</th>
+                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Épocas</th>
+                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Loss Final</th>
+                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Mejor Val Loss</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trainingSummary">
+                        <tr><td colspan="4" class="text-center py-4 text-gray-500">Cargando datos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Performance Summary -->
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Rendimiento</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="border-b border-gray-200 dark:border-slate-600">
+                            <th class="text-left py-2 text-gray-700 dark:text-gray-300">Modelo</th>
+                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Precisión</th>
+                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">FPS</th>
+                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="performanceSummary">
+                        <tr><td colspan="4" class="text-center py-4 text-gray-500">Cargando datos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Winner Section -->
+    <div id="winnerSection" class="hidden bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-2xl border border-yellow-200 dark:border-yellow-700 p-6">
+        <div class="flex items-center space-x-4">
+            <div class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center">
+                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                </svg>
+            </div>
+            <div>
+                <h3 id="winnerTitle" class="text-xl font-bold text-yellow-800 dark:text-yellow-300"></h3>
+                <p id="winnerDescription" class="text-yellow-700 dark:text-yellow-400"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+let modelData = {};
+const modelColors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
+const modelColorMap = {
+    'retinanet': '#3b82f6',  // Azul
+    'yolo': '#ef4444',       // Rojo
+    'resnet': '#10b981',     // Verde
+    'efficientnet': '#f59e0b', // Amarillo
+    'mobilenet': '#8b5cf6',  // Púrpura
+    'densenet': '#06b6d4'    // Cian
+};
+
+async function loadModelData() {
+    // Cargar datos desde el contexto Django
+    const djangoModelData = JSON.parse('{{ model_data_json|escapejs }}');
+    
+    // Mapear datos de Django a la estructura esperada
+    if (djangoModelData.retinanet) {
+        modelData['retinanet'] = djangoModelData.retinanet;
+    }
+    
+    if (djangoModelData.yolo) {
+        modelData['yolo'] = djangoModelData.yolo;
+    }
+    
+    createToggles();
+    drawCharts();
+    updateTables();
+    determineWinner();
+}
+
+function determineWinner() {
+    if (Object.keys(modelData).length < 2) return;
+    
+    let bestModel = null;
+    let bestScore = -1;
+    
+    Object.keys(modelData).forEach(key => {
+        const data = modelData[key];
+        // Score basado en precisión (70%) y velocidad (30%)
+        const score = data.performance_metrics.overall_accuracy * 0.7 + (data.speed_metrics.fps / 50) * 30;
+        if (score > bestScore) {
+            bestScore = score;
+            bestModel = data;
+        }
+    });
+    
+    if (bestModel) {
+        document.getElementById('winnerSection').classList.remove('hidden');
+        document.getElementById('winnerTitle').textContent = `🏆 Modelo Ganador: ${bestModel.model_info.architecture}`;
+        document.getElementById('winnerDescription').textContent = `Mejor balance entre precisión (${bestModel.performance_metrics.overall_accuracy.toFixed(1)}%) y velocidad (${bestModel.speed_metrics.fps.toFixed(1)} FPS)`;
+    }
+}
+
+function createToggles() {
+    createChartToggles('trainToggles', 'train');
+    createChartToggles('valToggles', 'val');
+}
+
+function createChartToggles(containerId, chartType) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    
+    if (Object.keys(modelData).length === 0) {
+        container.innerHTML = '<span class="text-sm text-red-500">No hay modelos</span>';
+        return;
+    }
+    
+    Object.keys(modelData).forEach((key, index) => {
+        const data = modelData[key];
+        const toggle = document.createElement('div');
+        toggle.className = 'flex items-center space-x-2';
+        toggle.innerHTML = `
+            <input type="checkbox" id="${key}-${chartType}-toggle" class="model-toggle" checked>
+            <label for="${key}-${chartType}-toggle" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                ${data.model_info.architecture || data.model_info.name}
+            </label>
+        `;
+        container.appendChild(toggle);
+        
+        toggle.querySelector('.model-toggle').addEventListener('change', () => {
+            if (chartType === 'train') {
+                drawApexChart('trainChart', 'train_loss_history', 'Training Loss', 'train');
+            } else {
+                drawApexChart('valChart', 'val_loss_history', 'Validation Loss', 'val');
+            }
+        });
+    });
+}
+
+function drawCharts() {
+    drawApexChart('trainChart', 'train_loss_history', 'Training Loss', 'train');
+    drawApexChart('valChart', 'val_loss_history', 'Validation Loss', 'val');
+}
+
+function drawApexChart(containerId, lossType, title, chartType) {
+    const activeModels = Object.keys(modelData).filter(key => {
+        const toggle = document.getElementById(`${key}-${chartType}-toggle`);
+        return toggle && toggle.checked;
+    });
+    
+    if (activeModels.length === 0) {
+        document.getElementById(containerId).innerHTML = '<div class="flex items-center justify-center h-full text-gray-500">No hay modelos seleccionados</div>';
+        return;
+    }
+    
+    const series = [];
+    
+    activeModels.forEach((key) => {
+        const data = modelData[key];
+        const history = data.training_results[lossType];
+        
+        const seriesData = history.map((loss, epoch) => ({
+            x: epoch + 1,
+            y: parseFloat(loss.toFixed(4))
+        }));
+        
+        series.push({
+            name: `${data.model_info.architecture} (${history.length} épocas)`,
+            data: seriesData,
+            color: modelColorMap[key] || modelColors[0]
+        });
+    });
+    
+    const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark');
+    
+    const options = {
+        series: series,
+        chart: {
+            type: 'line',
+            height: 420,
+            zoom: {
+                enabled: true,
+                type: 'x',
+                autoScaleYaxis: true
+            },
+            pan: {
+                enabled: true,
+                type: 'x'
+            },
+            toolbar: {
+                show: true,
+                offsetY: -10,
+                tools: {
+                    download: true,
+                    selection: true,
+                    zoom: true,
+                    zoomin: true,
+                    zoomout: true,
+                    pan: true,
+                    reset: true
+                },
+                export: {
+                    csv: {
+                        filename: `${title.replace(' ', '_')}_data`
+                    },
+                    svg: {
+                        filename: `${title.replace(' ', '_')}_chart`
+                    },
+                    png: {
+                        filename: `${title.replace(' ', '_')}_chart`
+                    }
+                }
+            },
+            background: 'transparent',
+            foreColor: isDark ? '#cbd5e1' : '#475569',
+            fontFamily: 'Inter, system-ui, sans-serif',
+            dropShadow: {
+                enabled: false
+            }
+        },
+        colors: modelColors,
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 3,
+            lineCap: 'round'
+        },
+        markers: {
+            size: 6,
+            strokeWidth: 2,
+            strokeColors: isDark ? '#1e293b' : '#ffffff',
+            fillOpacity: 1,
+            hover: {
+                size: 9,
+                sizeOffset: 2
+            }
+        },
+        grid: {
+            show: true,
+            borderColor: isDark ? '#3b82f6' : '#e2e8f0',
+            strokeDashArray: 3,
+            position: 'back',
+            opacity: isDark ? 0.3 : 0.8,
+            xaxis: {
+                lines: {
+                    show: true
+                }
+            },
+            yaxis: {
+                lines: {
+                    show: true
+                }
+            }
+        },
+        xaxis: {
+            title: {
+                text: 'Épocas',
+                style: {
+                    color: isDark ? '#cbd5e1' : '#475569',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    fontFamily: 'Inter, system-ui, sans-serif'
+                }
+            },
+            labels: {
+                style: {
+                    colors: isDark ? '#94a3b8' : '#64748b',
+                    fontSize: '11px',
+                    fontFamily: 'Inter, system-ui, sans-serif'
+                },
+                rotate: -45,
+                rotateAlways: false,
+                hideOverlappingLabels: true,
+                showDuplicates: false,
+                trim: false,
+                maxHeight: 120,
+                formatter: function(val) {
+                    // Mostrar solo cada 10 épocas si hay más de 50
+                    const maxEpochs = Math.max(...activeModels.map(key => modelData[key].training_results[lossType].length));
+                    if (maxEpochs > 50) {
+                        return val % 10 === 0 || val === 1 || val === maxEpochs ? val : '';
+                    } else if (maxEpochs > 25) {
+                        return val % 5 === 0 || val === 1 || val === maxEpochs ? val : '';
+                    }
+                    return val;
+                }
+            },
+            axisBorder: {
+                show: true,
+                color: isDark ? '#475569' : '#e2e8f0',
+                height: 1
+            },
+            axisTicks: {
+                show: true,
+                color: isDark ? '#475569' : '#e2e8f0',
+                height: 6
+            },
+            crosshairs: {
+                show: true,
+                width: 1,
+                position: 'back',
+                opacity: 0.9,
+                stroke: {
+                    color: isDark ? '#64748b' : '#94a3b8',
+                    width: 1,
+                    dashArray: 3
+                }
+            },
+            tickAmount: undefined,
+            min: undefined,
+            max: undefined
+        },
+        yaxis: {
+            title: {
+                text: 'Loss',
+                style: {
+                    color: isDark ? '#cbd5e1' : '#475569',
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    fontFamily: 'Inter, system-ui, sans-serif'
+                }
+            },
+            labels: {
+                style: {
+                    colors: isDark ? '#94a3b8' : '#64748b',
+                    fontSize: '12px',
+                    fontFamily: 'Inter, system-ui, sans-serif'
+                },
+                formatter: function(val) {
+                    return val.toFixed(3);
+                }
+            },
+            axisBorder: {
+                show: true,
+                color: isDark ? '#475569' : '#e2e8f0'
+            },
+            axisTicks: {
+                show: true,
+                color: isDark ? '#475569' : '#e2e8f0'
+            }
+        },
+        legend: {
+            show: true,
+            position: 'top',
+            horizontalAlign: 'left',
+            floating: false,
+            fontSize: '13px',
+            fontWeight: 500,
+            fontFamily: 'Inter, system-ui, sans-serif',
+            labels: {
+                colors: isDark ? '#cbd5e1' : '#475569',
+                useSeriesColors: false
+            },
+            markers: {
+                width: 14,
+                height: 14,
+                strokeWidth: 0,
+                strokeColor: '#fff',
+                fillColors: undefined,
+                radius: 7,
+                customHTML: undefined,
+                onClick: undefined,
+                offsetX: 0,
+                offsetY: 0
+            },
+            itemMargin: {
+                horizontal: 15,
+                vertical: 8
+            }
+        },
+        tooltip: {
+            enabled: true,
+            theme: isDark ? 'dark' : 'light',
+            style: {
+                fontSize: '13px',
+                fontFamily: 'Inter, system-ui, sans-serif'
+            },
+            x: {
+                show: true,
+                format: 'dd MMM',
+                formatter: function(val) {
+                    return 'Época ' + val;
+                }
+            },
+            y: {
+                formatter: function(val) {
+                    return 'Loss: ' + val.toFixed(4);
+                }
+            },
+            marker: {
+                show: true
+            },
+            custom: undefined,
+            fillSeriesColor: false,
+            followCursor: true,
+            inverseOrder: false,
+            shared: true,
+            intersect: false
+        },
+        responsive: [{
+            breakpoint: 768,
+            options: {
+                chart: {
+                    height: 300
+                },
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }]
+    };
+    
+    document.getElementById(containerId).innerHTML = '';
+    const chart = new ApexCharts(document.getElementById(containerId), options);
+    chart.render();
+}
+
+function updateTables() {
+    updateTrainingSummary();
+    updatePerformanceSummary();
+}
+
+function updateTrainingSummary() {
+    const tbody = document.getElementById('trainingSummary');
+    tbody.innerHTML = '';
+    
+    if (Object.keys(modelData).length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-red-500">No hay datos disponibles</td></tr>';
+        return;
+    }
+    
+    Object.keys(modelData).forEach((key) => {
+        const data = modelData[key];
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="py-2">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 rounded-full" style="background-color: ${modelColorMap[key] || modelColors[0]}"></div>
+                    <span class="font-medium text-gray-900 dark:text-white">${data.model_info.architecture || data.model_info.name}</span>
+                </div>
+            </td>
+            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.training_config.epochs_trained}</td>
+            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.training_results.final_train_loss.toFixed(4)}</td>
+            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.training_results.best_val_loss.toFixed(4)}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+function updatePerformanceSummary() {
+    const tbody = document.getElementById('performanceSummary');
+    tbody.innerHTML = '';
+    
+    if (Object.keys(modelData).length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-red-500">No hay datos disponibles</td></tr>';
+        return;
+    }
+    
+    Object.keys(modelData).forEach((key) => {
+        const data = modelData[key];
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="py-2">
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 rounded-full" style="background-color: ${modelColorMap[key] || modelColors[0]}"></div>
+                    <span class="font-medium text-gray-900 dark:text-white">${data.model_info.architecture || data.model_info.name}</span>
+                </div>
+            </td>
+            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.performance_metrics.overall_accuracy.toFixed(1)}%</td>
+            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.speed_metrics.fps.toFixed(1)}</td>
+            <td class="text-right py-2">
+                <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
+                    Entrenado
+                </span>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', loadModelData);
+</script>
+
+{% endblock %}

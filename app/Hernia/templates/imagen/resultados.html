@@ -54,7 +54,8 @@
                                 </div>
                                 <div class="flex-1">
                                     <h3 class="text-lg font-bold text-red-800 dark:text-red-300 mb-2">{{ grupo }} Detectada</h3>
-                                    <p class="text-sm text-red-700 dark:text-red-400 mb-3">Se ha identificado la presencia de una hernia en la imagen analizada.</p>
+                                    <p class="text-sm text-red-700 dark:text-red-400 mb-2">Se ha identificado la presencia de una hernia en la imagen analizada.</p>
+                                    {% if ubicacion %}<p class="text-xs text-red-600 dark:text-red-300 mb-3 font-medium">{{ ubicacion }}</p>{% endif %}
                                     <div class="flex items-center space-x-2">
                                         <span class="text-xs font-medium text-red-700 dark:text-red-400">Nivel de Confianza:</span>
                                         <div class="flex-1 bg-red-200 dark:bg-red-900/40 rounded-full h-2.5 max-w-xs">
@@ -79,7 +80,8 @@
                                 </div>
                                 <div class="flex-1">
                                     <h3 class="text-lg font-bold text-green-800 dark:text-green-300 mb-2">{{ grupo }}</h3>
-                                    <p class="text-sm text-green-700 dark:text-green-400 mb-3">No se detectaron indicios de hernia en la imagen analizada.</p>
+                                    <p class="text-sm text-green-700 dark:text-green-400 mb-2">No se detectaron indicios de hernia en la imagen analizada.</p>
+                                    {% if ubicacion %}<p class="text-xs text-green-600 dark:text-green-300 mb-3 font-medium">{{ ubicacion }}</p>{% endif %}
                                     <div class="flex items-center space-x-2">
                                         <span class="text-xs font-medium text-green-700 dark:text-green-400">Nivel de Confianza:</span>
                                         <div class="flex-1 bg-green-200 dark:bg-green-900/40 rounded-full h-2.5 max-w-xs">
@@ -207,7 +209,7 @@
                                 </div>
                                 <div class="flex-1 flex items-center justify-center p-4 overflow-auto">
                                     {% if original_image_url %}
-                                        <img class="zoomable-image max-w-full max-h-full object-contain transition-transform duration-300" src="{{ original_image_url }}" alt="Imagen Original" style="transform-origin: center;">
+                                        <img class="zoomable-image w-full h-full object-cover transition-transform duration-300" src="{{ original_image_url }}" alt="Imagen Original" style="transform-origin: center;">
                                     {% else %}
                                         <div class="flex flex-col items-center space-y-4">
                                             <svg class="w-24 h-24 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -226,7 +228,7 @@
                                 </div>
                                 <div class="flex-1 flex items-center justify-center p-4 overflow-auto">
                                     {% if processed_image_url %}
-                                        <img class="zoomable-image max-w-full max-h-full object-contain transition-transform duration-300" src="{{ processed_image_url }}" alt="Imagen Procesada" style="transform-origin: center;">
+                                        <img class="zoomable-image w-full h-full object-cover transition-transform duration-300" src="{{ processed_image_url }}" alt="Imagen Procesada" style="transform-origin: center;">
                                     {% else %}
                                         <div class="flex flex-col items-center space-y-4">
                                             <svg class="w-24 h-24 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

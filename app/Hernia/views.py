@@ -6,6 +6,8 @@ Gestiona las solicitudes HTTP y coordina con los servicios.
 
 import logging
 from io import BytesIO
+import json
+import os
 
 import pytz
 from django.conf import settings
@@ -156,6 +158,7 @@ def ver_resultado(request, id):
     context = {
         'grupo': historial_item.grupo,
         'porcentaje': historial_item.porcentaje,
+        'ubicacion': getattr(historial_item, 'ubicacion', 'No especificada'),
         'processed_image_url': historial_item.imagen.url,
         'fecha_imagen': fecha_imagen_local,
         'paciente_nombre': historial_item.paciente_nombre,
@@ -367,7 +370,7 @@ def subir_imagen(request):
                 imagen_obj.imagen.save(encrypted_name, buffer)
                 
                 # Extraer datos de predicción
-                grupo, porcentaje = ImageProcessingService.extract_prediction_data(result)
+                grupo, porcentaje, ubicacion = ImageProcessingService.extract_prediction_data(result)
                 
                 # Crear historial
                 historial = HistorialService.create_historial_from_image(
@@ -375,7 +378,8 @@ def subir_imagen(request):
                     imagen_obj,
                     paciente_nombre,
                     grupo,
-                    porcentaje
+                    porcentaje,
+                    ubicacion
                 )
                 
                 # Preparar contexto
@@ -385,6 +389,7 @@ def subir_imagen(request):
                 context = {
                     'grupo': grupo,
                     'porcentaje': porcentaje,
+                    'ubicacion': ubicacion,
                     'original_image_url': image_url,
                     'processed_image_url': imagen_obj.imagen.url,
                     'fecha_imagen': fecha_local,
@@ -460,4 +465,85 @@ def generar_pdf_general(request):
         logger.error(f"Error generando PDF general: {str(e)}")
         messages.error(request, 'Error al generar el PDF.')
         return redirect('historial_med')
+
+
+@login_required
+@require_http_methods(["GET"])
+def comparacion_view(request):
+    """
+    Vista para la comparación de modelos de IA.
+    Muestra gráficos comparativos de loss y métricas de rendimiento.
+    """
+    import json
+    import os
+    from django.conf import settings
+    
+    # Cargar datos de modelos desde archivos JSON
+    model_data = {}
+    
+    # Ruta al directorio de datos
+    data_dir = os.path.join(settings.BASE_DIR, 'app', 'Hernia', 'static', 'data')
+    
+    # Cargar RetinaNet
+    retinanet_file = os.path.join(data_dir, 'RetinaNet_9clases_v2_metrics_20251112_195554.json')
+    if os.path.exists(retinanet_file):
+        try:
+            with open(retinanet_file, 'r', encoding='utf-8') as f:
+                model_data['retinanet'] = json.load(f)
+        except Exception as e:
+            logger.error(f"Error cargando RetinaNet data: {str(e)}")
+    
+    # Cargar YOLO
+    yolo_file = os.path.join(data_dir, 'Yolo_detect_3.json')
+    if os.path.exists(yolo_file):
+        try:
+            with open(yolo_file, 'r', encoding='utf-8') as f:
+                model_data['yolo'] = json.load(f)
+        except Exception as e:
+            logger.error(f"Error cargando YOLO data: {str(e)}")
+    
+    # Serializar los datos como JSON para el template
+    model_data_json = json.dumps(model_data)
+    
+    return render(request, 'dashboard/comparacion.html', {
+        'model_data': model_data,
+        'model_data_json': model_data_json
+    })
+
+
+@login_required
+@require_http_methods(["GET"])
+def modelo_retinanet_view(request):
+    """
+    Vista para mostrar detalles específicos del modelo RetinaNet.
+    Muestra métricas detalladas, gráficos de entrenamiento y rendimiento.
+    """
+    import json
+    import os
+    from django.conf import settings
+    
+    # Cargar datos del modelo RetinaNet
+    retinanet_data = None
+    data_dir = os.path.join(settings.BASE_DIR, 'app', 'Hernia', 'static', 'data')
+    retinanet_file = os.path.join(data_dir, 'RetinaNet_9clases_v2_metrics_20251112_195554.json')
+    
+    if os.path.exists(retinanet_file):
+        try:
+            with open(retinanet_file, 'r', encoding='utf-8') as f:
+                retinanet_data = json.load(f)
+        except Exception as e:
+            logger.error(f"Error cargando RetinaNet data: {str(e)}")
+            messages.error(request, 'Error al cargar los datos del modelo RetinaNet.')
+    
+    if not retinanet_data:
+        messages.error(request, 'No se encontraron datos del modelo RetinaNet.')
+        return redirect('comparacion')
+    
+    # Serializar los datos como JSON para el template
+    retinanet_data_json = json.dumps(retinanet_data)
+    
+    return render(request, 'dashboard/retinanet.html', {
+        'retinanet_data': retinanet_data,
+        'retinanet_data_json': retinanet_data_json
+    })
 
