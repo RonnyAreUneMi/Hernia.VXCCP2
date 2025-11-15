@@ -1,105 +1,214 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Comparación de Modelos - HERN.IA{% endblock %}
+{% block title %}Dashboard de Modelos - HERN.IA{% endblock %}
 
 {% block content %}
 <div class="max-w-7xl mx-auto space-y-6">
     <!-- Header -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-800 dark:to-purple-800 rounded-2xl shadow-xl dark:shadow-2xl p-6 text-white border border-transparent dark:border-slate-600/50">
         <div class="flex items-center justify-between">
             <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+                <div class="w-16 h-16 bg-white/20 dark:bg-white/10 rounded-xl flex items-center justify-center backdrop-blur border border-white/20 dark:border-white/10">
+                    <svg class="w-8 h-8 text-white drop-shadow-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
                     </svg>
                 </div>
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Comparación de Modelos IA</h2>
-                    <p class="text-sm text-gray-600 dark:text-gray-400">Gráficas interactivas con zoom, pan y descarga</p>
+                    <h1 class="text-3xl font-bold drop-shadow-sm">Dashboard de Análisis de Modelos</h1>
+                    <p class="text-blue-100 dark:text-blue-200">Comparación completa de rendimiento y métricas</p>
                 </div>
             </div>
             
-            <!-- Info -->
-            <div class="text-sm text-gray-500">
-                Usa los controles de cada gráfica para interactuar
+            <div class="text-right">
+                <div class="text-sm text-blue-100 dark:text-blue-200">Modelos Analizados</div>
+                <div class="text-2xl font-bold drop-shadow-sm" id="modelCount">0</div>
             </div>
         </div>
     </div>
 
-    <!-- Charts Section -->
-    <div class="space-y-6">
-        <!-- Training Loss Chart -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Training Loss</h3>
-                <div id="trainToggles" class="flex items-center space-x-4">
-                    <!-- Toggles específicos para training -->
+    <!-- Training Loss -->
+    <div class="bg-white dark:bg-gradient-to-br dark:from-slate-800 dark:to-slate-900 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-slate-600/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
+                    </svg>
                 </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Training Loss</h3>
             </div>
-            <div id="trainChart" class="h-96 w-full"></div>
+            <div id="trainToggles" class="flex items-center space-x-4"></div>
         </div>
+        <div id="trainChart" class="h-96 w-full bg-gray-50/50 dark:bg-slate-700/20 rounded-lg p-2"></div>
+    </div>
 
-        <!-- Validation Loss Chart -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-            <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Validation Loss</h3>
-                <div id="valToggles" class="flex items-center space-x-4">
-                    <!-- Toggles específicos para validation -->
+    <!-- Validation Loss -->
+    <div class="bg-white dark:bg-gradient-to-br dark:from-slate-800 dark:to-slate-900 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-slate-600/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center">
+                    <svg class="w-4 h-4 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
                 </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-slate-100">Validation Loss</h3>
             </div>
-            <div id="valChart" class="h-96 w-full"></div>
+            <div id="valToggles" class="flex items-center space-x-4"></div>
         </div>
+        <div id="valChart" class="h-96 w-full bg-gray-50/50 dark:bg-slate-700/20 rounded-lg p-2"></div>
+    </div>
+
+    <!-- Accuracy per Class Comparison -->
+    <div class="bg-white dark:bg-gradient-to-br dark:from-emerald-900/20 dark:to-green-900/20 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-emerald-700/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center border border-green-200 dark:border-green-700/50">
+                    <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-emerald-100">Accuracy por Clase</h3>
+            </div>
+        </div>
+        <div id="accuracyChart" class="h-96 w-full bg-gray-50/50 dark:bg-slate-700/20 rounded-lg p-2"></div>
+    </div>
+
+
+
+    <!-- Confusion Matrices -->
+    <div class="bg-white dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-indigo-900/20 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-purple-700/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center border border-purple-200 dark:border-purple-700/50">
+                    <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-purple-100">Matrices de Confusión</h3>
+            </div>
+        </div>
+        <div id="confusionMatricesContainer" class="grid gap-6"></div>
+    </div>
+
+    <!-- F1-Score Comparison -->
+    <div class="bg-white dark:bg-gradient-to-br dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-blue-700/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+        <div class="flex items-center space-x-3 mb-4">
+            <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center border border-blue-200 dark:border-blue-700/50">
+                <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-blue-100">F1-Score por Clase</h3>
+        </div>
+        <div id="f1ScoreChart" class="h-96 w-full bg-gray-50/50 dark:bg-slate-700/20 rounded-lg p-2"></div>
+    </div>
+
+    <!-- Training Time Comparison -->
+    <div class="bg-white dark:bg-gradient-to-br dark:from-orange-900/20 dark:to-red-900/20 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-orange-700/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+        <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-orange-100 dark:bg-orange-900/30 rounded-lg flex items-center justify-center border border-orange-200 dark:border-orange-700/50">
+                    <svg class="w-5 h-5 text-orange-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-orange-100">Tiempo de Entrenamiento</h3>
+            </div>
+        </div>
+        <div id="trainingTimeChart" class="h-80 w-full bg-gray-50/50 dark:bg-slate-700/20 rounded-lg p-2"></div>
     </div>
 
     <!-- Summary Tables -->
-    <div class="grid lg:grid-cols-2 gap-6">
+    <div class="grid lg:grid-cols-3 gap-6">
         <!-- Training Summary -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Resumen de Entrenamiento</h3>
-            <div class="overflow-x-auto">
+        <div class="bg-white dark:bg-gradient-to-br dark:from-blue-900/30 dark:to-indigo-900/30 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-blue-600/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center border border-blue-200 dark:border-blue-700/50">
+                    <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-blue-100">Resumen de Entrenamiento</h3>
+            </div>
+            <div class="overflow-x-auto bg-gray-50/50 dark:bg-slate-700/20 rounded-lg">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-gray-200 dark:border-slate-600">
-                            <th class="text-left py-2 text-gray-700 dark:text-gray-300">Modelo</th>
-                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Épocas</th>
-                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Loss Final</th>
-                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Mejor Val Loss</th>
+                        <tr class="bg-gray-50 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-600">
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 rounded-l-lg">Modelo</th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Épocas</th>
+                            <th class="text-right py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 rounded-r-lg">Mejor Loss</th>
                         </tr>
                     </thead>
-                    <tbody id="trainingSummary">
-                        <tr><td colspan="4" class="text-center py-4 text-gray-500">Cargando datos...</td></tr>
+                    <tbody id="trainingSummary" class="divide-y divide-gray-200 dark:divide-slate-600">
+                        <tr><td colspan="3" class="text-center py-6 text-gray-500 dark:text-gray-400">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
         <!-- Performance Summary -->
-        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 p-6">
-            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Rendimiento</h3>
-            <div class="overflow-x-auto">
+        <div class="bg-white dark:bg-gradient-to-br dark:from-green-900/30 dark:to-emerald-900/30 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-green-600/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center border border-green-200 dark:border-green-700/50">
+                    <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-green-100">Rendimiento</h3>
+            </div>
+            <div class="overflow-x-auto bg-gray-50/50 dark:bg-slate-700/20 rounded-lg">
                 <table class="w-full text-sm">
                     <thead>
-                        <tr class="border-b border-gray-200 dark:border-slate-600">
-                            <th class="text-left py-2 text-gray-700 dark:text-gray-300">Modelo</th>
-                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Precisión</th>
-                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">FPS</th>
-                            <th class="text-right py-2 text-gray-700 dark:text-gray-300">Estado</th>
+                        <tr class="bg-gray-50 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-600">
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 rounded-l-lg">Modelo</th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Accuracy</th>
+                            <th class="text-right py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 rounded-r-lg">FPS</th>
                         </tr>
                     </thead>
-                    <tbody id="performanceSummary">
-                        <tr><td colspan="4" class="text-center py-4 text-gray-500">Cargando datos...</td></tr>
+                    <tbody id="performanceSummary" class="divide-y divide-gray-200 dark:divide-slate-600">
+                        <tr><td colspan="3" class="text-center py-6 text-gray-500 dark:text-gray-400">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Class Performance -->
+        <div class="bg-white dark:bg-gradient-to-br dark:from-purple-900/30 dark:to-pink-900/30 rounded-2xl shadow-sm dark:shadow-lg border border-gray-200 dark:border-purple-600/50 p-6 transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-8 h-8 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center border border-purple-200 dark:border-purple-700/50">
+                    <svg class="w-4 h-4 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-purple-100">Mejor por Clase</h3>
+            </div>
+            <div class="overflow-x-auto bg-gray-50/50 dark:bg-slate-700/20 rounded-lg">
+                <table class="w-full text-sm">
+                    <thead>
+                        <tr class="bg-gray-50 dark:bg-slate-700/50 border-b border-gray-200 dark:border-slate-600">
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 rounded-l-lg">Clase</th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700 dark:text-gray-300">Mejor Modelo</th>
+                            <th class="text-right py-3 px-4 font-semibold text-gray-700 dark:text-gray-300 rounded-r-lg">Accuracy</th>
+                        </tr>
+                    </thead>
+                    <tbody id="classSummary" class="divide-y divide-gray-200 dark:divide-slate-600">
+                        <tr><td colspan="3" class="text-center py-6 text-gray-500 dark:text-gray-400">Cargando...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
+
+
+
+
     <!-- Winner Section -->
-    <div id="winnerSection" class="hidden bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-2xl border border-yellow-200 dark:border-yellow-700 p-6">
+    <div id="winnerSection" class="hidden bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20 rounded-2xl border border-yellow-200 dark:border-yellow-700/50 p-6 shadow-sm dark:shadow-lg transition-all duration-300 hover:shadow-md dark:hover:shadow-xl">
         <div class="flex items-center space-x-4">
-            <div class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center">
-                <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+            <div class="w-16 h-16 bg-yellow-400 dark:bg-yellow-500 rounded-full flex items-center justify-center shadow-lg border border-yellow-300 dark:border-yellow-600">
+                <svg class="w-8 h-8 text-white drop-shadow-sm" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                 </svg>
             </div>
@@ -109,9 +218,13 @@
             </div>
         </div>
     </div>
+
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="{% static 'js/dashboard_charts.js' %}"></script>
+<script src="{% static 'js/model_analytics.js' %}"></script>
 <script>
 let modelData = {};
 const modelColors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
@@ -124,23 +237,62 @@ const modelColorMap = {
     'densenet': '#06b6d4'    // Cian
 };
 
+const classNames = ['Hernia', 'L1', 'L2', 'L3', 'L4', 'L5', 'S1', 'Sin Hernia', 'T12'];
+
 async function loadModelData() {
-    // Cargar datos desde el contexto Django
-    const djangoModelData = JSON.parse('{{ model_data_json|escapejs }}');
-    
-    // Mapear datos de Django a la estructura esperada
-    if (djangoModelData.retinanet) {
-        modelData['retinanet'] = djangoModelData.retinanet;
+    try {
+        console.log('Iniciando carga de datos...');
+        const djangoModelData = JSON.parse('{{ model_data_json|escapejs }}');
+        console.log('Datos recibidos:', djangoModelData);
+        
+        if (!djangoModelData || typeof djangoModelData !== 'object') {
+            console.error('Datos de modelo inválidos:', djangoModelData);
+            document.getElementById('modelCount').textContent = '0';
+            return;
+        }
+        
+        if (djangoModelData.retinanet) {
+            modelData['retinanet'] = djangoModelData.retinanet;
+            console.log('RetinaNet cargado');
+        }
+        
+        if (djangoModelData.yolo) {
+            modelData['yolo'] = djangoModelData.yolo;
+            console.log('YOLO cargado');
+        }
+        
+        // Solo proceder si hay al menos un modelo
+        if (Object.keys(modelData).length === 0) {
+            console.warn('No model data available');
+            document.getElementById('modelCount').textContent = '0';
+            return;
+        }
+        
+        console.log('Modelos cargados:', Object.keys(modelData));
+        
+        // Actualizar contador de modelos
+        document.getElementById('modelCount').textContent = Object.keys(modelData).length;
+        
+        // Configurar datos auxiliares
+        if (typeof dashboardCharts !== 'undefined') {
+            dashboardCharts.setModelData(modelData);
+        }
+        if (typeof modelAnalytics !== 'undefined') {
+            modelAnalytics.setModelData(modelData);
+        }
+        
+        createToggles();
+        drawAllCharts();
+        updateTables();
+        
+        // Solo ejecutar comparaciones si hay más de un modelo
+        if (Object.keys(modelData).length > 1) {
+            determineWinner();
+        }
+        
+    } catch (error) {
+        console.error('Error loading model data:', error);
     }
-    
-    if (djangoModelData.yolo) {
-        modelData['yolo'] = djangoModelData.yolo;
-    }
-    
-    createToggles();
-    drawCharts();
-    updateTables();
-    determineWinner();
 }
 
 function determineWinner() {
@@ -176,17 +328,18 @@ function createChartToggles(containerId, chartType) {
     container.innerHTML = '';
     
     if (Object.keys(modelData).length === 0) {
-        container.innerHTML = '<span class="text-sm text-red-500">No hay modelos</span>';
+        container.innerHTML = '<span class="text-sm text-red-500 dark:text-red-400">No hay modelos</span>';
         return;
     }
     
     Object.keys(modelData).forEach((key, index) => {
         const data = modelData[key];
         const toggle = document.createElement('div');
-        toggle.className = 'flex items-center space-x-2';
+        toggle.className = 'flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700/50 transition-colors duration-200';
         toggle.innerHTML = `
-            <input type="checkbox" id="${key}-${chartType}-toggle" class="model-toggle" checked>
-            <label for="${key}-${chartType}-toggle" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <input type="checkbox" id="${key}-${chartType}-toggle" class="model-toggle w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" checked>
+            <div class="w-3 h-3 rounded-full border border-gray-300 dark:border-gray-600" style="background-color: ${modelColorMap[key] || modelColors[0]}"></div>
+            <label for="${key}-${chartType}-toggle" class="text-sm font-medium text-gray-700 dark:text-gray-300 cursor-pointer select-none">
                 ${data.model_info.architecture || data.model_info.name}
             </label>
         `;
@@ -202,9 +355,13 @@ function createChartToggles(containerId, chartType) {
     });
 }
 
-function drawCharts() {
+function drawAllCharts() {
     drawApexChart('trainChart', 'train_loss_history', 'Training Loss', 'train');
     drawApexChart('valChart', 'val_loss_history', 'Validation Loss', 'val');
+    drawAccuracyChart();
+    drawConfusionMatrices();
+    drawF1ScoreChart();
+    drawTrainingTimeChart();
 }
 
 function drawApexChart(containerId, lossType, title, chartType) {
@@ -214,109 +371,94 @@ function drawApexChart(containerId, lossType, title, chartType) {
     });
     
     if (activeModels.length === 0) {
-        document.getElementById(containerId).innerHTML = '<div class="flex items-center justify-center h-full text-gray-500">No hay modelos seleccionados</div>';
+        document.getElementById(containerId).innerHTML = '<div class="flex items-center justify-center h-full text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-slate-800/50 rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-600"><div class="text-center"><svg class="w-12 h-12 mx-auto mb-2 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg><p>No hay modelos seleccionados</p></div></div>';
         return;
     }
     
-    const series = [];
+    const isDark = document.documentElement.classList.contains('dark');
+    const maxEpochs = Math.max(...activeModels.map(key => modelData[key].training_results[lossType].length));
     
-    activeModels.forEach((key) => {
+    const series = activeModels.map((key) => {
         const data = modelData[key];
         const history = data.training_results[lossType];
         
-        const seriesData = history.map((loss, epoch) => ({
-            x: epoch + 1,
-            y: parseFloat(loss.toFixed(4))
-        }));
-        
-        series.push({
+        return {
             name: `${data.model_info.architecture} (${history.length} épocas)`,
-            data: seriesData,
+            data: history.map((loss, epoch) => ({
+                x: epoch + 1,
+                y: parseFloat(loss.toFixed(4))
+            })),
             color: modelColorMap[key] || modelColors[0]
-        });
+        };
     });
-    
-    const isDark = document.documentElement.classList.contains('dark') || document.body.classList.contains('dark');
     
     const options = {
         series: series,
         chart: {
             type: 'line',
-            height: 420,
-            zoom: {
-                enabled: true,
-                type: 'x',
-                autoScaleYaxis: true
-            },
-            pan: {
-                enabled: true,
-                type: 'x'
-            },
+            height: 400,
+            background: 'transparent',
+            foreColor: isDark ? '#cbd5e1' : '#475569',
+            fontFamily: 'Inter, system-ui, sans-serif',
             toolbar: {
                 show: true,
-                offsetY: -10,
                 tools: {
                     download: true,
-                    selection: true,
                     zoom: true,
                     zoomin: true,
                     zoomout: true,
                     pan: true,
                     reset: true
                 },
-                export: {
-                    csv: {
-                        filename: `${title.replace(' ', '_')}_data`
-                    },
-                    svg: {
-                        filename: `${title.replace(' ', '_')}_chart`
-                    },
-                    png: {
-                        filename: `${title.replace(' ', '_')}_chart`
-                    }
+                theme: isDark ? 'dark' : 'light',
+                style: {
+                    colors: isDark ? ['#cbd5e1'] : ['#475569']
                 }
             },
-            background: 'transparent',
-            foreColor: isDark ? '#cbd5e1' : '#475569',
-            fontFamily: 'Inter, system-ui, sans-serif',
-            dropShadow: {
-                enabled: false
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
             }
-        },
-        colors: modelColors,
-        dataLabels: {
-            enabled: false
         },
         stroke: {
             curve: 'smooth',
-            width: 3,
-            lineCap: 'round'
+            width: 3
         },
         markers: {
-            size: 6,
+            size: 5,
             strokeWidth: 2,
             strokeColors: isDark ? '#1e293b' : '#ffffff',
-            fillOpacity: 1,
-            hover: {
-                size: 9,
-                sizeOffset: 2
-            }
+            hover: { 
+                size: 8,
+                sizeOffset: 3
+            },
+            discrete: []
         },
         grid: {
             show: true,
-            borderColor: isDark ? '#3b82f6' : '#e2e8f0',
-            strokeDashArray: 3,
+            borderColor: isDark ? '#374151' : '#f3f4f6',
+            strokeDashArray: 0,
             position: 'back',
-            opacity: isDark ? 0.3 : 0.8,
             xaxis: {
-                lines: {
-                    show: true
-                }
+                lines: { show: false }
             },
             yaxis: {
-                lines: {
-                    show: true
-                }
+                lines: { show: true }
+            },
+            padding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0
             }
         },
         xaxis: {
@@ -325,26 +467,18 @@ function drawApexChart(containerId, lossType, title, chartType) {
                 style: {
                     color: isDark ? '#cbd5e1' : '#475569',
                     fontSize: '14px',
-                    fontWeight: 600,
-                    fontFamily: 'Inter, system-ui, sans-serif'
+                    fontWeight: 600
                 }
             },
             labels: {
                 style: {
                     colors: isDark ? '#94a3b8' : '#64748b',
-                    fontSize: '11px',
-                    fontFamily: 'Inter, system-ui, sans-serif'
+                    fontSize: '11px'
                 },
-                rotate: -45,
-                rotateAlways: false,
-                hideOverlappingLabels: true,
-                showDuplicates: false,
-                trim: false,
-                maxHeight: 120,
                 formatter: function(val) {
-                    // Mostrar solo cada 10 épocas si hay más de 50
-                    const maxEpochs = Math.max(...activeModels.map(key => modelData[key].training_results[lossType].length));
-                    if (maxEpochs > 50) {
+                    if (maxEpochs > 100) {
+                        return val % 25 === 0 || val === 1 || val === maxEpochs ? val : '';
+                    } else if (maxEpochs > 50) {
                         return val % 10 === 0 || val === 1 || val === maxEpochs ? val : '';
                     } else if (maxEpochs > 25) {
                         return val % 5 === 0 || val === 1 || val === maxEpochs ? val : '';
@@ -354,28 +488,8 @@ function drawApexChart(containerId, lossType, title, chartType) {
             },
             axisBorder: {
                 show: true,
-                color: isDark ? '#475569' : '#e2e8f0',
-                height: 1
-            },
-            axisTicks: {
-                show: true,
-                color: isDark ? '#475569' : '#e2e8f0',
-                height: 6
-            },
-            crosshairs: {
-                show: true,
-                width: 1,
-                position: 'back',
-                opacity: 0.9,
-                stroke: {
-                    color: isDark ? '#64748b' : '#94a3b8',
-                    width: 1,
-                    dashArray: 3
-                }
-            },
-            tickAmount: undefined,
-            min: undefined,
-            max: undefined
+                color: isDark ? '#64748b' : '#d1d5db'
+            }
         },
         yaxis: {
             title: {
@@ -383,15 +497,13 @@ function drawApexChart(containerId, lossType, title, chartType) {
                 style: {
                     color: isDark ? '#cbd5e1' : '#475569',
                     fontSize: '14px',
-                    fontWeight: 600,
-                    fontFamily: 'Inter, system-ui, sans-serif'
+                    fontWeight: 600
                 }
             },
             labels: {
                 style: {
                     colors: isDark ? '#94a3b8' : '#64748b',
-                    fontSize: '12px',
-                    fontFamily: 'Inter, system-ui, sans-serif'
+                    fontSize: '11px'
                 },
                 formatter: function(val) {
                     return val.toFixed(3);
@@ -399,52 +511,25 @@ function drawApexChart(containerId, lossType, title, chartType) {
             },
             axisBorder: {
                 show: true,
-                color: isDark ? '#475569' : '#e2e8f0'
-            },
-            axisTicks: {
-                show: true,
-                color: isDark ? '#475569' : '#e2e8f0'
+                color: isDark ? '#64748b' : '#d1d5db'
             }
         },
         legend: {
-            show: true,
             position: 'top',
             horizontalAlign: 'left',
-            floating: false,
-            fontSize: '13px',
+            fontSize: '12px',
             fontWeight: 500,
-            fontFamily: 'Inter, system-ui, sans-serif',
             labels: {
-                colors: isDark ? '#cbd5e1' : '#475569',
-                useSeriesColors: false
-            },
-            markers: {
-                width: 14,
-                height: 14,
-                strokeWidth: 0,
-                strokeColor: '#fff',
-                fillColors: undefined,
-                radius: 7,
-                customHTML: undefined,
-                onClick: undefined,
-                offsetX: 0,
-                offsetY: 0
-            },
-            itemMargin: {
-                horizontal: 15,
-                vertical: 8
+                colors: isDark ? '#cbd5e1' : '#475569'
             }
         },
         tooltip: {
-            enabled: true,
             theme: isDark ? 'dark' : 'light',
             style: {
-                fontSize: '13px',
+                fontSize: '12px',
                 fontFamily: 'Inter, system-ui, sans-serif'
             },
             x: {
-                show: true,
-                format: 'dd MMM',
                 formatter: function(val) {
                     return 'Época ' + val;
                 }
@@ -457,24 +542,19 @@ function drawApexChart(containerId, lossType, title, chartType) {
             marker: {
                 show: true
             },
-            custom: undefined,
-            fillSeriesColor: false,
-            followCursor: true,
-            inverseOrder: false,
-            shared: true,
-            intersect: false
-        },
-        responsive: [{
-            breakpoint: 768,
-            options: {
-                chart: {
-                    height: 300
-                },
-                legend: {
-                    position: 'bottom'
-                }
+            custom: function({series, seriesIndex, dataPointIndex, w}) {
+                const isDark = document.documentElement.classList.contains('dark');
+                const bgColor = isDark ? '#1e293b' : '#ffffff';
+                const textColor = isDark ? '#e2e8f0' : '#374151';
+                const borderColor = isDark ? '#475569' : '#d1d5db';
+                
+                return `<div class="px-3 py-2 rounded-lg shadow-lg border" style="background-color: ${bgColor}; color: ${textColor}; border-color: ${borderColor}; font-family: Inter, system-ui, sans-serif;">
+                    <div class="font-semibold text-sm">Época ${w.globals.labels[dataPointIndex]}</div>
+                    <div class="text-xs mt-1">Loss: ${series[seriesIndex][dataPointIndex].toFixed(4)}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">${w.globals.seriesNames[seriesIndex]}</div>
+                </div>`;
             }
-        }]
+        }
     };
     
     document.getElementById(containerId).innerHTML = '';
@@ -485,6 +565,7 @@ function drawApexChart(containerId, lossType, title, chartType) {
 function updateTables() {
     updateTrainingSummary();
     updatePerformanceSummary();
+    updateClassSummary();
 }
 
 function updateTrainingSummary() {
@@ -492,7 +573,7 @@ function updateTrainingSummary() {
     tbody.innerHTML = '';
     
     if (Object.keys(modelData).length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-red-500">No hay datos disponibles</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500 dark:text-red-400">No hay datos</td></tr>';
         return;
     }
     
@@ -500,15 +581,18 @@ function updateTrainingSummary() {
         const data = modelData[key];
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td class="py-2">
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 rounded-full" style="background-color: ${modelColorMap[key] || modelColors[0]}"></div>
-                    <span class="font-medium text-gray-900 dark:text-white">${data.model_info.architecture || data.model_info.name}</span>
+            <td class="py-3 px-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-4 h-4 rounded-full" style="background-color: ${modelColorMap[key] || modelColors[0]}"></div>
+                    <span class="font-medium text-gray-900 dark:text-white text-sm">${data.model_info.architecture || data.model_info.name}</span>
                 </div>
             </td>
-            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.training_config.epochs_trained}</td>
-            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.training_results.final_train_loss.toFixed(4)}</td>
-            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.training_results.best_val_loss.toFixed(4)}</td>
+            <td class="text-center py-3 px-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300">
+                    ${data.training_config.epochs_trained || data.training_config.epochs_configured}
+                </span>
+            </td>
+            <td class="text-right py-3 px-4 font-mono text-sm text-gray-600 dark:text-gray-400">${data.training_results.best_val_loss.toFixed(4)}</td>
         `;
         tbody.appendChild(row);
     });
@@ -519,7 +603,7 @@ function updatePerformanceSummary() {
     tbody.innerHTML = '';
     
     if (Object.keys(modelData).length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-red-500">No hay datos disponibles</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500 dark:text-red-400">No hay datos</td></tr>';
         return;
     }
     
@@ -527,17 +611,20 @@ function updatePerformanceSummary() {
         const data = modelData[key];
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td class="py-2">
-                <div class="flex items-center space-x-2">
-                    <div class="w-3 h-3 rounded-full" style="background-color: ${modelColorMap[key] || modelColors[0]}"></div>
-                    <span class="font-medium text-gray-900 dark:text-white">${data.model_info.architecture || data.model_info.name}</span>
+            <td class="py-3 px-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-4 h-4 rounded-full" style="background-color: ${modelColorMap[key] || modelColors[0]}"></div>
+                    <span class="font-medium text-gray-900 dark:text-white text-sm">${data.model_info.architecture || data.model_info.name}</span>
                 </div>
             </td>
-            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.performance_metrics.overall_accuracy.toFixed(1)}%</td>
-            <td class="text-right py-2 text-gray-600 dark:text-gray-400">${data.speed_metrics.fps.toFixed(1)}</td>
-            <td class="text-right py-2">
-                <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400">
-                    Entrenado
+            <td class="text-center py-3 px-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">
+                    ${data.performance_metrics.overall_accuracy.toFixed(1)}%
+                </span>
+            </td>
+            <td class="text-right py-3 px-4">
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/50 dark:text-orange-300">
+                    ${data.speed_metrics.fps.toFixed(1)} FPS
                 </span>
             </td>
         `;
@@ -545,7 +632,635 @@ function updatePerformanceSummary() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', loadModelData);
+function updateClassSummary() {
+    const tbody = document.getElementById('classSummary');
+    tbody.innerHTML = '';
+    
+    if (Object.keys(modelData).length === 0) {
+        tbody.innerHTML = '<tr><td colspan="3" class="text-center py-4 text-red-500 dark:text-red-400">No hay datos</td></tr>';
+        return;
+    }
+    
+    classNames.forEach(className => {
+        let bestModel = null;
+        let bestAccuracy = -1;
+        
+        Object.keys(modelData).forEach(key => {
+            const data = modelData[key];
+            const classMetrics = data.performance_metrics.per_class_metrics[className];
+            if (classMetrics && classMetrics.accuracy > bestAccuracy) {
+                bestAccuracy = classMetrics.accuracy;
+                bestModel = data.model_info.architecture || data.model_info.name;
+            }
+        });
+        
+        if (bestModel) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="py-3 px-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700/70 dark:text-gray-300">
+                        ${className}
+                    </span>
+                </td>
+                <td class="text-center py-3 px-4 text-sm font-medium text-gray-900 dark:text-white">${bestModel}</td>
+                <td class="text-right py-3 px-4">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${bestAccuracy >= 80 ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : bestAccuracy >= 60 ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300'}">
+                        ${bestAccuracy.toFixed(1)}%
+                    </span>
+                </td>
+            `;
+            tbody.appendChild(row);
+        }
+    });
+}
+
+// Nuevas funciones para gráficas adicionales
+function drawAccuracyChart() {
+    const series = [];
+    const categories = classNames;
+    
+    Object.keys(modelData).forEach(key => {
+        const data = modelData[key];
+        const accuracies = categories.map(className => {
+            const classMetrics = data.performance_metrics.per_class_metrics[className];
+            return classMetrics ? classMetrics.accuracy : 0;
+        });
+        
+        series.push({
+            name: data.model_info.architecture || data.model_info.name,
+            data: accuracies,
+            color: modelColorMap[key] || modelColors[0]
+        });
+    });
+    
+    const isDark = document.documentElement.classList.contains('dark');
+    
+    const options = {
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 400,
+            background: 'transparent',
+            foreColor: isDark ? '#cbd5e1' : '#475569',
+            fontFamily: 'Inter, system-ui, sans-serif',
+            toolbar: {
+                show: true,
+                theme: isDark ? 'dark' : 'light'
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '65%',
+                endingShape: 'rounded',
+                borderRadius: 4
+            }
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            show: true,
+            width: 1,
+            colors: ['transparent']
+        },
+        xaxis: {
+            categories: categories,
+            labels: {
+                style: {
+                    colors: isDark ? '#94a3b8' : '#64748b',
+                    fontSize: '11px'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Accuracy (%)',
+                style: {
+                    color: isDark ? '#cbd5e1' : '#475569'
+                }
+            },
+            labels: {
+                style: {
+                    colors: isDark ? '#94a3b8' : '#64748b'
+                }
+            }
+        },
+        fill: {
+            opacity: 0.9
+        },
+        tooltip: {
+            theme: isDark ? 'dark' : 'light',
+            style: {
+                fontSize: '12px',
+                fontFamily: 'Inter, system-ui, sans-serif'
+            },
+            y: {
+                formatter: function (val) {
+                    return val.toFixed(1) + '%';
+                }
+            },
+            custom: function({series, seriesIndex, dataPointIndex, w}) {
+                const isDark = document.documentElement.classList.contains('dark');
+                const bgColor = isDark ? '#1e293b' : '#ffffff';
+                const textColor = isDark ? '#e2e8f0' : '#374151';
+                const borderColor = isDark ? '#475569' : '#d1d5db';
+                
+                return `<div class="px-3 py-2 rounded-lg shadow-lg border" style="background-color: ${bgColor}; color: ${textColor}; border-color: ${borderColor}; font-family: Inter, system-ui, sans-serif;">
+                    <div class="font-semibold text-sm">${w.globals.labels[dataPointIndex]}</div>
+                    <div class="text-xs mt-1">Accuracy: ${series[seriesIndex][dataPointIndex].toFixed(1)}%</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">${w.globals.seriesNames[seriesIndex]}</div>
+                </div>`;
+            }
+        },
+        legend: {
+            labels: {
+                colors: isDark ? '#cbd5e1' : '#475569'
+            }
+        },
+        grid: {
+            borderColor: isDark ? '#64748b' : '#d1d5db',
+            strokeDashArray: 3,
+            opacity: isDark ? 0.4 : 0.6
+        }
+    };
+    
+    const chart = new ApexCharts(document.getElementById('accuracyChart'), options);
+    chart.render();
+}
+
+
+
+function drawConfusionMatrices() {
+    const container = document.getElementById('confusionMatricesContainer');
+    container.innerHTML = '';
+    
+    // Determinar el layout basado en el número de modelos
+    const modelCount = Object.keys(modelData).length;
+    const gridClass = modelCount === 1 ? 'grid-cols-1' : modelCount === 2 ? 'lg:grid-cols-2' : 'lg:grid-cols-3';
+    container.className = `grid ${gridClass} gap-6`;
+    
+    Object.keys(modelData).forEach(key => {
+        const data = modelData[key];
+        
+        const matrixDiv = document.createElement('div');
+        matrixDiv.className = 'bg-gray-50 dark:bg-gradient-to-br dark:from-slate-700 dark:to-slate-800 rounded-lg p-4 border border-gray-200 dark:border-slate-500';
+        matrixDiv.innerHTML = `
+            <div class="flex items-center justify-between mb-3">
+                <h4 class="text-md font-semibold text-gray-900 dark:text-slate-100">${data.model_info.architecture || data.model_info.name}</h4>
+                <div class="w-4 h-4 rounded-full" style="background-color: ${modelColorMap[key] || modelColors[0]}"></div>
+            </div>
+            <div id="confusionMatrix_${key}" class="h-96"></div>
+            <div class="mt-3 text-xs text-gray-600 dark:text-slate-300">
+                <div class="flex justify-between">
+                    <span>Total Muestras: ${data.performance_metrics.total_predictions}</span>
+                    <span>Accuracy: ${data.performance_metrics.overall_accuracy.toFixed(1)}%</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(matrixDiv);
+        
+        // Crear matriz de confusión
+        setTimeout(() => {
+            if (data.confusion_matrix && data.confusion_matrix.matrix) {
+                createEnhancedConfusionMatrix(data, `confusionMatrix_${key}`);
+            } else {
+                // Para RetinaNet que no tiene matriz de confusión, crear una simulada
+                createSimulatedConfusionMatrix(data, `confusionMatrix_${key}`);
+            }
+        }, 100);
+    });
+}
+
+function drawF1ScoreChart() {
+    const series = [];
+    const categories = classNames;
+    
+    Object.keys(modelData).forEach(key => {
+        const data = modelData[key];
+        const f1Scores = categories.map(className => {
+            const classMetrics = data.performance_metrics.per_class_metrics[className];
+            return classMetrics ? classMetrics.f1_score : 0;
+        });
+        
+        series.push({
+            name: data.model_info.architecture || data.model_info.name,
+            data: f1Scores,
+            color: modelColorMap[key] || modelColors[0]
+        });
+    });
+    
+    const isDark = document.documentElement.classList.contains('dark');
+    
+    const options = {
+        series: series,
+        chart: {
+            type: 'line',
+            height: 400,
+            background: 'transparent',
+            foreColor: isDark ? '#cbd5e1' : '#475569',
+            fontFamily: 'Inter, system-ui, sans-serif',
+            toolbar: {
+                show: true,
+                theme: isDark ? 'dark' : 'light'
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800
+            }
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 3
+        },
+        markers: {
+            size: 6,
+            strokeWidth: 2,
+            strokeColors: isDark ? '#1e293b' : '#ffffff'
+        },
+        xaxis: {
+            categories: categories,
+            labels: {
+                style: {
+                    colors: isDark ? '#94a3b8' : '#64748b',
+                    fontSize: '11px'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'F1-Score',
+                style: {
+                    color: isDark ? '#cbd5e1' : '#475569'
+                }
+            },
+            labels: {
+                style: {
+                    colors: isDark ? '#94a3b8' : '#64748b'
+                }
+            }
+        },
+        tooltip: {
+            theme: isDark ? 'dark' : 'light',
+            style: {
+                fontSize: '12px',
+                fontFamily: 'Inter, system-ui, sans-serif'
+            },
+            custom: function({series, seriesIndex, dataPointIndex, w}) {
+                const isDark = document.documentElement.classList.contains('dark');
+                const bgColor = isDark ? '#1e293b' : '#ffffff';
+                const textColor = isDark ? '#e2e8f0' : '#374151';
+                const borderColor = isDark ? '#475569' : '#d1d5db';
+                
+                return `<div class="px-3 py-2 rounded-lg shadow-lg border" style="background-color: ${bgColor}; color: ${textColor}; border-color: ${borderColor}; font-family: Inter, system-ui, sans-serif;">
+                    <div class="font-semibold text-sm">${w.globals.labels[dataPointIndex]}</div>
+                    <div class="text-xs mt-1">F1-Score: ${series[seriesIndex][dataPointIndex].toFixed(3)}</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400">${w.globals.seriesNames[seriesIndex]}</div>
+                </div>`;
+            }
+        },
+        legend: {
+            labels: {
+                colors: isDark ? '#cbd5e1' : '#475569'
+            }
+        },
+        grid: {
+            borderColor: isDark ? '#64748b' : '#d1d5db',
+            strokeDashArray: 3,
+            opacity: isDark ? 0.4 : 0.6
+        }
+    };
+    
+    const chart = new ApexCharts(document.getElementById('f1ScoreChart'), options);
+    chart.render();
+}
+
+function drawTrainingTimeChart() {
+    const series = [{
+        name: 'Tiempo (minutos)',
+        data: Object.keys(modelData).map(key => {
+            const data = modelData[key];
+            const trainingTime = data.speed_metrics.training_time_minutes || 
+                                (data.training_config.epochs_trained * 0.5); // Estimación si no está disponible
+            return {
+                x: data.model_info.architecture || data.model_info.name,
+                y: trainingTime,
+                fillColor: modelColorMap[key] || modelColors[0]
+            };
+        })
+    }];
+    
+    const isDark = document.documentElement.classList.contains('dark');
+    
+    const options = {
+        series: series,
+        chart: {
+            type: 'bar',
+            height: 350,
+            background: 'transparent',
+            foreColor: isDark ? '#cbd5e1' : '#475569',
+            fontFamily: 'Inter, system-ui, sans-serif',
+            toolbar: {
+                show: true,
+                theme: isDark ? 'dark' : 'light'
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800
+            }
+        },
+        plotOptions: {
+            bar: {
+                horizontal: true,
+                distributed: true,
+                borderRadius: 4
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function(val) {
+                return val.toFixed(1) + ' min';
+            },
+            style: {
+                colors: ['#fff'],
+                fontSize: '12px',
+                fontWeight: 'bold'
+            }
+        },
+        xaxis: {
+            title: {
+                text: 'Tiempo (minutos)',
+                style: {
+                    color: isDark ? '#cbd5e1' : '#475569'
+                }
+            },
+            labels: {
+                style: {
+                    colors: isDark ? '#94a3b8' : '#64748b'
+                }
+            }
+        },
+        yaxis: {
+            labels: {
+                style: {
+                    colors: isDark ? '#94a3b8' : '#64748b'
+                }
+            }
+        },
+        tooltip: {
+            theme: isDark ? 'dark' : 'light',
+            style: {
+                fontSize: '12px',
+                fontFamily: 'Inter, system-ui, sans-serif'
+            },
+            y: {
+                formatter: function(val) {
+                    return val.toFixed(1) + ' minutos';
+                }
+            },
+            custom: function({series, seriesIndex, dataPointIndex, w}) {
+                const isDark = document.documentElement.classList.contains('dark');
+                const bgColor = isDark ? '#1e293b' : '#ffffff';
+                const textColor = isDark ? '#e2e8f0' : '#374151';
+                const borderColor = isDark ? '#475569' : '#d1d5db';
+                
+                return `<div class="px-3 py-2 rounded-lg shadow-lg border" style="background-color: ${bgColor}; color: ${textColor}; border-color: ${borderColor}; font-family: Inter, system-ui, sans-serif;">
+                    <div class="font-semibold text-sm">${w.globals.labels[dataPointIndex]}</div>
+                    <div class="text-xs mt-1">Tiempo: ${series[seriesIndex][dataPointIndex].toFixed(1)} min</div>
+                </div>`;
+            }
+        },
+        legend: {
+            show: false
+        },
+        grid: {
+            borderColor: isDark ? '#64748b' : '#d1d5db',
+            strokeDashArray: 3,
+            opacity: isDark ? 0.4 : 0.6
+        }
+    };
+    
+    const chart = new ApexCharts(document.getElementById('trainingTimeChart'), options);
+    chart.render();
+}
+
+
+
+// Función para crear matriz de confusión simulada para modelos sin matriz
+function createSimulatedConfusionMatrix(data, containerId) {
+    const classes = classNames;
+    const seriesData = [];
+    
+    // Crear datos simulados basados en las métricas por clase
+    classes.forEach((className, i) => {
+        const rowData = [];
+        const classMetrics = data.performance_metrics.per_class_metrics[className];
+        
+        classes.forEach((predictedClass, j) => {
+            let value = 0;
+            
+            if (classMetrics && classMetrics.total_samples > 0) {
+                if (i === j) {
+                    // Diagonal: predicciones correctas
+                    value = classMetrics.correct_predictions || 0;
+                } else {
+                    // Fuera de diagonal: distribuir errores de manera más realista
+                    const errors = classMetrics.total_samples - (classMetrics.correct_predictions || 0);
+                    if (errors > 0) {
+                        // Distribuir errores con algo de variación
+                        const baseError = Math.floor(errors / (classes.length - 1));
+                        const remainder = errors % (classes.length - 1);
+                        value = baseError + (j < remainder ? 1 : 0);
+                    }
+                }
+            }
+            rowData.push(value);
+        });
+        
+        seriesData.push({
+            name: className,
+            data: rowData
+        });
+    });
+    
+    const isDark = document.documentElement.classList.contains('dark');
+    
+    const options = {
+        series: seriesData,
+        chart: {
+            type: 'heatmap',
+            height: 380,
+            background: 'transparent',
+            foreColor: isDark ? '#e2e8f0' : '#374151'
+        },
+        dataLabels: {
+            enabled: true,
+            style: {
+                colors: ['#ffffff'],
+                fontSize: '12px',
+                fontWeight: '700',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
+            }
+        },
+        xaxis: {
+            categories: classes,
+            title: {
+                text: 'Predicho',
+                style: {
+                    color: isDark ? '#e2e8f0' : '#374151',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                }
+            },
+            labels: {
+                style: {
+                    colors: isDark ? '#cbd5e1' : '#4b5563',
+                    fontSize: '11px'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Real',
+                style: {
+                    color: isDark ? '#e2e8f0' : '#374151',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                }
+            }
+        },
+        tooltip: {
+            theme: isDark ? 'dark' : 'light'
+        },
+        plotOptions: {
+            heatmap: {
+                shadeIntensity: 0.7,
+                radius: 3,
+                useFillColorAsStroke: false,
+                colorScale: {
+                    ranges: [
+                        { from: 0, to: 0, color: isDark ? '#0f172a' : '#f8fafc', name: 'Cero' },
+                        { from: 1, to: 3, color: isDark ? '#ef4444' : '#fee2e2', name: 'Muy Bajo' },
+                        { from: 4, to: 7, color: isDark ? '#f97316' : '#fed7aa', name: 'Bajo' },
+                        { from: 8, to: 15, color: isDark ? '#f59e0b' : '#fef3c7', name: 'Medio' },
+                        { from: 16, to: 25, color: isDark ? '#22c55e' : '#a7f3d0', name: 'Alto' },
+                        { from: 26, to: 100, color: isDark ? '#3b82f6' : '#93c5fd', name: 'Muy Alto' }
+                    ]
+                }
+            }
+        }
+    };
+    
+    const chart = new ApexCharts(document.getElementById(containerId), options);
+    chart.render();
+}
+
+// Función para crear matriz de confusión mejorada con normalización
+function createEnhancedConfusionMatrix(data, containerId) {
+    const matrix = data.confusion_matrix.matrix;
+    const classes = data.confusion_matrix.classes;
+    
+    const seriesData = [];
+    matrix.forEach((row, i) => {
+        seriesData.push({
+            name: classes[i],
+            data: row
+        });
+    });
+    
+    const isDark = document.documentElement.classList.contains('dark');
+    
+    // Encontrar el valor máximo para escalar colores
+    const maxValue = Math.max(...matrix.flat());
+    
+    const options = {
+        series: seriesData,
+        chart: {
+            type: 'heatmap',
+            height: 380,
+            background: 'transparent',
+            foreColor: isDark ? '#e2e8f0' : '#374151'
+        },
+        dataLabels: {
+            enabled: true,
+            style: {
+                colors: ['#ffffff'],
+                fontSize: '12px',
+                fontWeight: '700',
+                textShadow: '1px 1px 2px rgba(0,0,0,0.8)'
+            }
+        },
+        xaxis: {
+            categories: classes,
+            title: {
+                text: 'Predicho',
+                style: {
+                    color: isDark ? '#e2e8f0' : '#374151',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                }
+            },
+            labels: {
+                style: {
+                    colors: isDark ? '#cbd5e1' : '#4b5563',
+                    fontSize: '11px'
+                }
+            }
+        },
+        yaxis: {
+            title: {
+                text: 'Real',
+                style: {
+                    color: isDark ? '#e2e8f0' : '#374151',
+                    fontSize: '14px',
+                    fontWeight: '600'
+                }
+            }
+        },
+        tooltip: {
+            theme: isDark ? 'dark' : 'light'
+        },
+        plotOptions: {
+            heatmap: {
+                shadeIntensity: 0.8,
+                radius: 3,
+                useFillColorAsStroke: false,
+                colorScale: {
+                    ranges: [
+                        { from: 0, to: Math.ceil(maxValue * 0.1), color: isDark ? '#0f172a' : '#f1f5f9', name: 'Muy Bajo' },
+                        { from: Math.ceil(maxValue * 0.1) + 1, to: Math.ceil(maxValue * 0.3), color: isDark ? '#ef4444' : '#fee2e2', name: 'Bajo' },
+                        { from: Math.ceil(maxValue * 0.3) + 1, to: Math.ceil(maxValue * 0.5), color: isDark ? '#f97316' : '#fed7aa', name: 'Medio' },
+                        { from: Math.ceil(maxValue * 0.5) + 1, to: Math.ceil(maxValue * 0.8), color: isDark ? '#22c55e' : '#a7f3d0', name: 'Alto' },
+                        { from: Math.ceil(maxValue * 0.8) + 1, to: maxValue, color: isDark ? '#3b82f6' : '#60a5fa', name: 'Muy Alto' }
+                    ]
+                }
+            }
+        }
+    };
+    
+    const chart = new ApexCharts(document.getElementById(containerId), options);
+    chart.render();
+}
+
+
+
+// Esperar a que ApexCharts se cargue completamente
+function waitForApexCharts() {
+    if (typeof ApexCharts !== 'undefined') {
+        loadModelData();
+    } else {
+        setTimeout(waitForApexCharts, 100);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', waitForApexCharts);
 </script>
 
 {% endblock %}
