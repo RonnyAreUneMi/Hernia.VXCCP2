@@ -1,8 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block title %}ResNet50-FPN - Marco Teórico{% endblock %}
-
 {% block content %}
 <style>
 /* Corregir colores en punto 1 para modo oscuro */
@@ -38,9 +36,8 @@ body.dark .bg-slate-600 .text-black {
 </style>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
 <div class="max-w-7xl mx-auto space-y-8">
-    
+  
     <!-- Header Principal -->
     <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl shadow-xl p-8 text-white">
         <div class="flex items-center justify-between">
@@ -55,7 +52,6 @@ body.dark .bg-slate-600 .text-black {
             </div>
         </div>
     </div>
-
     <!-- Enlace al Entrenamiento -->
     <div class="bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-orange-500 rounded-lg p-6">
         <div class="flex items-start space-x-4">
@@ -67,7 +63,7 @@ body.dark .bg-slate-600 .text-black {
             <div class="flex-1">
                 <h3 class="text-lg font-semibold text-gray-900 mb-2">Notebook de Entrenamiento</h3>
                 <p class="text-gray-700 mb-3">El código completo del entrenamiento está disponible en Google Colab</p>
-                <a href="https://colab.research.google.com/drive/1-zgYAdY42ZpX3hHdAMIK3S0g18zA3zsA?usp=sharing" 
+                <a href="https://colab.research.google.com/drive/1-zgYAdY42ZpX3hHdAMIK3S0g18zA3zsA?usp=sharing"
                    target="_blank"
                    class="inline-flex items-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-medium rounded-lg transition-colors">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
@@ -81,7 +77,6 @@ body.dark .bg-slate-600 .text-black {
             </div>
         </div>
     </div>
-
     <!-- 1. Arquitectura -->
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-8 section-card">
         <div class="flex items-center space-x-3 mb-6">
@@ -92,7 +87,7 @@ body.dark .bg-slate-600 .text-black {
             </div>
             <h2 class="text-3xl font-bold text-gray-900 dark:text-white">1. Arquitectura del Modelo</h2>
         </div>
-        
+      
         <div class="mb-6">
             <div class="bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 rounded-xl p-6 border border-blue-200 dark:border-blue-700">
                 <div class="text-center text-2xl font-semibold text-white mb-2">
@@ -103,15 +98,27 @@ body.dark .bg-slate-600 .text-black {
                 </div>
             </div>
         </div>
-        
+      
         <!-- Imagen de arquitectura Faster R-CNN -->
         <div class="mb-6">
             <div class="bg-white dark:bg-slate-700 rounded-xl p-4 border border-gray-200 dark:border-slate-600">
-                <img src="https://miro.medium.com/v2/resize:fit:1400/1*0pDD5CimVFQHbRaLAEJFjA.png" 
-                     alt="Arquitectura Faster R-CNN" 
+                <img src="/app/Hernia/static/images/faster.png"
+                     alt="Arquitectura Faster R-CNN"
                      class="w-full h-auto rounded-lg">
                 <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 text-center">
-                    <strong>Fuente:</strong> <a href="https://arxiv.org/abs/1506.01497" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">Ren et al. (2015) - Faster R-CNN: Towards Real-Time Object Detection with Region Proposal Networks</a>
+                    <strong>Fuente:</strong> <a href="https://www.researchgate.net/figure/Fast-R-CNN-architecture_fig7_368780840" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">Tashin Ahmed. (2019) - The problems and solution of deep learning based rice disease detection in natural scene images</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Imagen adicional de arquitectura -->
+        <div class="mb-6">
+            <div class="bg-white dark:bg-slate-700 rounded-xl p-4 border border-gray-200 dark:border-slate-600">
+                <img src="/app/Hernia/static/images/resnet50.png" 
+                     alt="Arquitectura Resnet50" 
+                     class="w-full h-auto rounded-lg">
+                <div class="mt-3 text-xs text-gray-500 dark:text-gray-400 text-center">
+                    <strong>Fuente:</strong> <a href="https://jananisbabu.github.io/ResNet50_From_Scratch_Tensorflow/" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">ResNet50 From Scratch Tensorflow</a>
                 </div>
             </div>
         </div>
@@ -137,7 +144,6 @@ body.dark .bg-slate-600 .text-black {
             </div>
         </div>
     </div>
-
     <!-- 2. Funciones de Loss -->
     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 section-card">
         <div class="flex items-center space-x-3 mb-6">
@@ -148,14 +154,13 @@ body.dark .bg-slate-600 .text-black {
             </div>
             <h2 class="text-3xl font-bold text-gray-900">2. Funciones de Loss</h2>
         </div>
-
         <div class="space-y-8">
             <!-- 2.1 RPN Loss -->
             <div class="border-l-4 border-purple-500 pl-6">
                 <h3 class="text-xl font-bold text-gray-900 mb-4">2.1 Region Proposal Network (RPN) Loss</h3>
                 <div class="bg-gray-50 rounded-xl p-6 mb-4">
                     <div class="text-center text-lg font-mono overflow-x-auto">
-                        $$L_{RPN} = L_{cls}(p_i, p_i^*) + \lambda L_{reg}(t_i, t_i^*)$$
+                        \[ L_{RPN} = L_{cls}(p_i, p_i^*) + \lambda L_{reg}(t_i, t_i^*) \]
                     </div>
                 </div>
                 <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
@@ -164,13 +169,12 @@ body.dark .bg-slate-600 .text-black {
                     </p>
                 </div>
             </div>
-
             <!-- 2.2 Fast R-CNN Loss -->
             <div class="border-l-4 border-blue-500 pl-6">
                 <h3 class="text-xl font-bold text-gray-900 mb-4">2.2 Fast R-CNN Detection Loss</h3>
                 <div class="bg-gray-50 rounded-xl p-6 mb-4">
                     <div class="text-center font-mono overflow-x-auto">
-                        $$L_{det} = L_{cls}(p, u) + \lambda[u \geq 1]L_{loc}(t^u, v)$$
+                        \[ L_{det} = L_{cls}(p, u) + \lambda[u \geq 1]L_{loc}(t^u, v) \]
                     </div>
                 </div>
                 <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
@@ -179,13 +183,12 @@ body.dark .bg-slate-600 .text-black {
                     </p>
                 </div>
             </div>
-
             <!-- 2.3 Loss Total -->
             <div class="border-l-4 border-green-500 pl-6">
                 <h3 class="text-xl font-bold text-gray-900 mb-4">2.3 Loss Total Faster R-CNN</h3>
                 <div class="bg-gray-50 rounded-xl p-6 mb-4">
                     <div class="text-center text-lg font-mono overflow-x-auto">
-                        $$L_{total} = L_{RPN} + L_{det}$$
+                        \[ L_{total} = L_{RPN} + L_{det} \]
                     </div>
                 </div>
                 <div class="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 border border-yellow-300 dark:border-yellow-600">
@@ -196,7 +199,6 @@ body.dark .bg-slate-600 .text-black {
             </div>
         </div>
     </div>
-
     <!-- 3. Configuración de Entrenamiento -->
     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 section-card">
         <div class="flex items-center space-x-3 mb-6">
@@ -207,13 +209,11 @@ body.dark .bg-slate-600 .text-black {
             </div>
             <h2 class="text-3xl font-bold text-gray-900">3. Configuración de Entrenamiento</h2>
         </div>
-
         <!-- Parámetros principales -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
             <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 border border-blue-200 text-center">
                 <div class="text-xs font-semibold text-blue-100 mb-2">TAMAÑO IMAGEN</div>
-                <div class="text-3xl font-bold text-white">Variable</div>
-                <div class="text-xs text-blue-200 mt-1">Original size</div>
+                <div class="text-3xl font-bold text-white">640×640</div>
             </div>
             <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-5 border border-purple-200 text-center">
                 <div class="text-xs font-semibold text-purple-100 mb-2">BATCH SIZE</div>
@@ -228,7 +228,6 @@ body.dark .bg-slate-600 .text-black {
                 <div class="text-3xl font-bold text-white">65</div>
             </div>
         </div>
-
         <!-- Tabla de hiperparámetros -->
         <div class="overflow-x-auto">
             <table class="w-full">
@@ -299,8 +298,8 @@ body.dark .bg-slate-600 .text-black {
             </table>
         </div>
     </div>
-
-    <!-- 4. Técnicas de Optimización -->
+   
+    <!-- 4. Iteraciones de Optimización -->
     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 section-card">
         <div class="flex items-center space-x-3 mb-6">
             <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
@@ -308,9 +307,203 @@ body.dark .bg-slate-600 .text-black {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                 </svg>
             </div>
-            <h2 class="text-3xl font-bold text-gray-900">4. Técnicas de Optimización Implementadas</h2>
+            <h2 class="text-3xl font-bold text-gray-900">4. Iteraciones de Optimización</h2>
         </div>
-
+        <div class="space-y-6">
+            <!-- Versión 1: 30 Épocas con Early Stopping -->
+            <div class="border-2 border-red-300 rounded-xl p-6 bg-red-50">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-red-900">Versión 1: 30 Épocas con Early Stopping</h3>
+                    <span class="px-3 py-1 bg-red-600 text-white rounded-lg text-sm font-semibold">DESCARTADA</span>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Learning Rate</div>
+                        <div class="font-mono text-lg font-bold text-red-700">1e-4 → 1e-7</div>
+                        <div class="text-xs text-gray-600">AdamW + ReduceLR</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Early Stopping</div>
+                        <div class="font-mono text-lg font-bold text-red-700">Patience: 15</div>
+                        <div class="text-xs text-gray-600">Activado época 25</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Copy-Paste</div>
+                        <div class="font-mono text-lg font-bold text-red-700">p=0.5-0.6</div>
+                        <div class="text-xs text-gray-600">2-3 objetos/imagen</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-4 border-l-4 border-red-500">
+                    <div class="font-semibold text-red-900 mb-2">Problema Identificado:</div>
+                    <p class="text-gray-700">Early stopping detuvo el entrenamiento prematuramente en época 25. Mejor modelo en época 10 con val_loss=0.4602, pero el modelo no tuvo suficientes épocas para converger adecuadamente. Gap controlado (21%) pero rendimiento subóptimo.</p>
+                </div>
+            </div>
+            <!-- Versión 2: Copy-Paste Ultra-Agresivo -->
+            <div class="border-2 border-orange-300 rounded-xl p-6 bg-orange-50">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-orange-900">Versión 2: Copy-Paste Ultra-Agresivo (30 Épocas)</h3>
+                    <span class="px-3 py-1 bg-orange-600 text-white rounded-lg text-sm font-semibold">DESCARTADA</span>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Learning Rate</div>
+                        <div class="font-mono text-lg font-bold text-orange-700">5e-5</div>
+                        <div class="text-xs text-gray-600">Fijo (muy bajo)</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Early Stopping</div>
+                        <div class="font-mono text-lg font-bold text-orange-700">Patience: 7</div>
+                        <div class="text-xs text-gray-600">Activado época 14</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Copy-Paste</div>
+                        <div class="font-mono text-lg font-bold text-orange-700">p=0.3</div>
+                        <div class="text-xs text-gray-600">Pool balanceado x40</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-4 border-l-4 border-orange-500">
+                    <div class="font-semibold text-orange-900 mb-2">Problema Identificado:</div>
+                    <p class="text-gray-700">Learning rate demasiado bajo (5e-5) causó convergencia lenta. Early stopping se activó en época 14, deteniendo prematuramente. Mejor val_loss=0.5171 en época 7, pero con overfitting severo (gap >0.3). Copy-paste generó 1,602 instancias sintéticas pero no logró equilibrar el dataset efectivamente.</p>
+                </div>
+            </div>
+            <!-- Versión 3: 100 Épocas con Warm Restart (FINAL) -->
+            <div class="border-2 border-green-400 rounded-xl p-6 bg-green-50">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-green-900">Versión 3: 100 Épocas con Warm Restart (FINAL)</h3>
+                    <span class="px-3 py-1 bg-green-600 text-white rounded-lg text-sm font-semibold">SELECCIONADA</span>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Learning Rate</div>
+                        <div class="font-mono text-lg font-bold text-green-700">2e-4 → 1e-7</div>
+                        <div class="text-xs text-gray-600">Cosine Warm Restart</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Early Stopping</div>
+                        <div class="font-mono text-lg font-bold text-green-700">Desactivado</div>
+                        <div class="text-xs text-gray-600">100 épocas completas</div>
+                    </div>
+                    <div class="bg-white rounded-lg p-3">
+                        <div class="text-xs text-gray-500 mb-1">Scheduler</div>
+                        <div class="font-mono text-lg font-bold text-green-700">T_0=20, T_mult=2</div>
+                        <div class="text-xs text-gray-600">Reinicio cada ciclo</div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg p-4 border-l-4 border-green-500">
+                    <div class="font-semibold text-green-900 mb-2">Resultados Obtenidos:</div>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Val Loss: <strong>0.4547</strong> (mejor modelo en época 65)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Mejora del <strong>51.1%</strong> vs v1 (0.9235 → 0.4547)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Warm Restart en épocas 20, 60 y 100 - reinicio efectivo de exploración</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Train Loss final: <strong>0.1304</strong> - convergencia estable</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="w-5 h-5 text-green-600 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>100 épocas completas sin early stopping - exploración exhaustiva</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Tabla comparativa -->
+        <div class="mt-8">
+            <h3 class="text-xl font-bold text-gray-900 mb-4">Comparación de Resultados</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-gray-100 border-b-2 border-gray-300">
+                            <th class="text-left py-3 px-4 font-semibold text-gray-700">Métrica</th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700">V1 (30 Épocas)</th>
+                            <th class="text-center py-3 px-4 font-semibold text-gray-700">V2 (CP Agresivo)</th>
+                            <th class="text-center py-3 px-4 font-semibold text-green-700 bg-green-50">V3 (100 Épocas)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-900">Mejor Val Loss</td>
+                            <td class="py-3 px-4 text-center font-mono">0.4602</td>
+                            <td class="py-3 px-4 text-center font-mono">0.5171</td>
+                            <td class="py-3 px-4 text-center font-mono font-bold text-green-700 bg-green-50">0.4547</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-900">Mejor Época</td>
+                            <td class="py-3 px-4 text-center">10</td>
+                            <td class="py-3 px-4 text-center">7</td>
+                            <td class="py-3 px-4 text-center font-bold text-green-700 bg-green-50">65</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-900">Épocas Totales</td>
+                            <td class="py-3 px-4 text-center">25 (early stop)</td>
+                            <td class="py-3 px-4 text-center">14 (early stop)</td>
+                            <td class="py-3 px-4 text-center font-bold text-green-700 bg-green-50">100</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-900">Train Loss Final</td>
+                            <td class="py-3 px-4 text-center">0.1917</td>
+                            <td class="py-3 px-4 text-center">0.1635</td>
+                            <td class="py-3 px-4 text-center font-bold text-green-700 bg-green-50">0.1304</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-900">LR Scheduler</td>
+                            <td class="py-3 px-4 text-center">ReduceLROnPlateau</td>
+                            <td class="py-3 px-4 text-center">ReduceLROnPlateau</td>
+                            <td class="py-3 px-4 text-center font-bold text-green-700 bg-green-50">CosineWarmRestart</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-900">Early Stopping</td>
+                            <td class="py-3 px-4 text-center text-red-600 font-bold">Sí (patience=15)</td>
+                            <td class="py-3 px-4 text-center text-red-600 font-bold">Sí (patience=7)</td>
+                            <td class="py-3 px-4 text-center font-bold text-green-700 bg-green-50">No</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-900">LR Inicial</td>
+                            <td class="py-3 px-4 text-center">1e-4</td>
+                            <td class="py-3 px-4 text-center">5e-5</td>
+                            <td class="py-3 px-4 text-center font-bold text-green-700 bg-green-50">2e-4</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4 font-medium text-gray-900">Mejora vs Inicial</td>
+                            <td class="py-3 px-4 text-center">50.1%</td>
+                            <td class="py-3 px-4 text-center">44.0%</td>
+                            <td class="py-3 px-4 text-center font-bold text-green-700 bg-green-50">50.8%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+   
+    <!-- 5. Técnicas de Optimización Implementadas -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 section-card">
+        <div class="flex items-center space-x-3 mb-6">
+            <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                <svg class="w-7 h-7 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-900">5. Técnicas de Optimización Implementadas</h2>
+        </div>
         <div class="space-y-6">
             <!-- Copy-Paste -->
             <div class="bg-gray-50 dark:bg-slate-700 rounded-xl p-6 border border-gray-200 dark:border-slate-600">
@@ -327,7 +520,6 @@ body.dark .bg-slate-600 .text-black {
                     </div>
                 </div>
             </div>
-
             <!-- Weighted Sampler -->
             <div class="bg-gray-50 dark:bg-slate-700 rounded-xl p-6 border border-gray-200 dark:border-slate-600">
                 <div class="flex items-start space-x-4">
@@ -336,7 +528,7 @@ body.dark .bg-slate-600 .text-black {
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Weighted Random Sampler Exponencial</h3>
                         <div class="bg-white rounded-lg p-4 mb-3 border border-gray-200">
                             <div class="font-mono text-sm overflow-x-auto">
-                                $w_i = \begin{cases} (1/f_c)^{1.5} \times 50 & f_c \leq 5 \\ (1/f_c)^{1.3} \times 35 & 5 < f_c \leq 10 \\ (1/f_c)^{1.1} \times 20 & 10 < f_c \leq 30 \\ 1/f_c & f_c > 30 \end{cases}$
+                                \[ w_i = \begin{cases} (1/f_c)^{1.5} \times 50 & f_c \leq 5 \\ (1/f_c)^{1.3} \times 35 & 5 < f_c \leq 10 \\ (1/f_c)^{1.1} \times 20 & 10 < f_c \leq 30 \\ 1/f_c & f_c > 30 \end{cases} \]
                             </div>
                         </div>
                         <p class="text-gray-700 dark:text-gray-300 mb-2">
@@ -348,7 +540,6 @@ body.dark .bg-slate-600 .text-black {
                     </div>
                 </div>
             </div>
-
             <!-- Data Augmentation -->
             <div class="bg-gray-50 dark:bg-slate-700 rounded-xl p-6 border border-gray-200 dark:border-slate-600">
                 <div class="flex items-start space-x-4">
@@ -364,7 +555,6 @@ body.dark .bg-slate-600 .text-black {
                     </div>
                 </div>
             </div>
-
             <!-- Cosine Annealing Warm Restarts -->
             <div class="bg-gray-50 dark:bg-slate-700 rounded-xl p-6 border border-gray-200 dark:border-slate-600">
                 <div class="flex items-start space-x-4">
@@ -373,7 +563,7 @@ body.dark .bg-slate-600 .text-black {
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Cosine Annealing Warm Restarts</h3>
                         <div class="bg-white rounded-lg p-4 mb-3 border border-gray-200">
                             <div class="font-mono text-sm overflow-x-auto">
-                                $\eta_t = \eta_{min} + \frac{1}{2}(\eta_{max} - \eta_{min})\left(1 + \cos\left(\frac{\pi T_{cur}}{T_i}\right)\right)$
+                                \[ \eta_t = \eta_{min} + \frac{1}{2}(\eta_{max} - \eta_{min})\left(1 + \cos\left(\frac{\pi T_{cur}}{T_i}\right)\right) \]
                             </div>
                         </div>
                         <p class="text-gray-700 dark:text-gray-300 mb-2">
@@ -385,7 +575,6 @@ body.dark .bg-slate-600 .text-black {
                     </div>
                 </div>
             </div>
-
             <!-- AdamW -->
             <div class="bg-gray-50 dark:bg-slate-700 rounded-xl p-6 border border-gray-200 dark:border-slate-600">
                 <div class="flex items-start space-x-4">
@@ -394,7 +583,7 @@ body.dark .bg-slate-600 .text-black {
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">AdamW Optimizer</h3>
                         <div class="bg-white rounded-lg p-4 mb-3 border border-gray-200">
                             <div class="font-mono text-sm overflow-x-auto">
-                                $w_{t+1} = w_t - \alpha(\hat{m}_t / \sqrt{\hat{v}_t + \epsilon} + \lambda w_t)$
+                                \[ w_{t+1} = w_t - \alpha(\hat{m}_t / \sqrt{\hat{v}_t + \epsilon} + \lambda w_t) \]
                             </div>
                         </div>
                         <p class="text-gray-700 dark:text-gray-300 mb-2">
@@ -406,7 +595,6 @@ body.dark .bg-slate-600 .text-black {
                     </div>
                 </div>
             </div>
-
             <!-- Gradient Clipping -->
             <div class="bg-gray-50 dark:bg-slate-700 rounded-xl p-6 border border-gray-200 dark:border-slate-600">
                 <div class="flex items-start space-x-4">
@@ -415,7 +603,7 @@ body.dark .bg-slate-600 .text-black {
                         <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-3">Gradient Clipping</h3>
                         <div class="bg-white rounded-lg p-4 mb-3 border border-gray-200">
                             <div class="font-mono text-sm overflow-x-auto">
-                                $\nabla_{clip} = \begin{cases} \nabla & ||\nabla|| \leq 1.0 \\ 1.0 \times \frac{\nabla}{||\nabla||} & ||\nabla|| > 1.0 \end{cases}$
+                                \[ \nabla_{clip} = \begin{cases} \nabla & ||\nabla|| \leq 1.0 \\ 1.0 \times \frac{\nabla}{||\nabla||} & ||\nabla|| > 1.0 \end{cases} \]
                             </div>
                         </div>
                         <p class="text-gray-700 dark:text-gray-300 mb-2">
@@ -429,8 +617,7 @@ body.dark .bg-slate-600 .text-black {
             </div>
         </div>
     </div>
-
-    <!-- 5. Evolución del Loss -->
+    <!-- 6. Evolución del Loss -->
     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 section-card">
         <div class="flex items-center space-x-3 mb-6">
             <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
@@ -438,9 +625,8 @@ body.dark .bg-slate-600 .text-black {
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
                 </svg>
             </div>
-            <h2 class="text-3xl font-bold text-gray-900">5. Evolución del Loss Durante Entrenamiento (100 Épocas)</h2>
+            <h2 class="text-3xl font-bold text-gray-900">6. Evolución del Loss Durante Entrenamiento (100 Épocas)</h2>
         </div>
-
         <div class="grid md:grid-cols-2 gap-6 mb-6">
             <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 border border-blue-200">
                 <h3 class="text-lg font-bold text-white mb-4">Train Loss</h3>
@@ -465,7 +651,6 @@ body.dark .bg-slate-600 .text-black {
                     </div>
                 </div>
             </div>
-
             <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 border border-purple-200">
                 <h3 class="text-lg font-bold text-white mb-4">Validation Loss</h3>
                 <div class="space-y-3">
@@ -490,7 +675,6 @@ body.dark .bg-slate-600 .text-black {
                 </div>
             </div>
         </div>
-
         <div class="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl p-6 border border-yellow-300">
             <h3 class="text-lg font-bold text-gray-900 mb-4">Interpretación de las Curvas</h3>
             <div class="space-y-3 text-gray-700">
@@ -509,184 +693,8 @@ body.dark .bg-slate-600 .text-black {
             </div>
         </div>
     </div>
-
-    <!-- 6. Resultados de Evaluación -->
-    <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 section-card">
-        <div class="flex items-center space-x-3 mb-6">
-            <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
-                <svg class="w-7 h-7 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
-            </div>
-            <h2 class="text-3xl font-bold text-gray-900">6. Resultados de Evaluación en Validación</h2>
-        </div>
-
-        <!-- Métricas Globales -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-5 border border-green-200 text-center">
-                <div class="text-xs font-semibold text-green-100 mb-2">ACCURACY</div>
-                <div class="text-3xl font-bold text-white">42.0%</div>
-                <div class="text-xs text-green-200 mt-1">Overall</div>
-            </div>
-            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-5 border border-blue-200 text-center">
-                <div class="text-xs font-semibold text-blue-100 mb-2">F1-SCORE</div>
-                <div class="text-3xl font-bold text-white">29.5%</div>
-                <div class="text-xs text-blue-200 mt-1">Macro Average</div>
-            </div>
-            <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-5 border border-purple-200 text-center">
-                <div class="text-xs font-semibold text-purple-100 mb-2">PRECISION</div>
-                <div class="text-3xl font-bold text-white">35.2%</div>
-                <div class="text-xs text-purple-200 mt-1">Macro Average</div>
-            </div>
-            <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-5 border border-orange-200 text-center">
-                <div class="text-xs font-semibold text-orange-100 mb-2">RECALL</div>
-                <div class="text-3xl font-bold text-white">27.3%</div>
-                <div class="text-xs text-orange-200 mt-1">Macro Average</div>
-            </div>
-        </div>
-
-        <!-- Métricas Clases Minoritarias -->
-        <div class="bg-gradient-to-r from-red-50 to-pink-50 rounded-xl p-6 border border-red-300 mb-8">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">🎯 Desempeño en Clases Minoritarias (L1, L2, L3, T12)</h3>
-            <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                    <div class="text-sm text-gray-600 mb-2">F1-Score Minoritarias</div>
-                    <div class="text-3xl font-bold text-red-700">16.2%</div>
-                </div>
-                <div>
-                    <div class="text-sm text-gray-600 mb-2">Recall Minoritarias</div>
-                    <div class="text-3xl font-bold text-red-700">14.0%</div>
-                </div>
-            </div>
-            <div class="mt-4 pt-4 border-t border-red-200">
-                <p class="text-sm text-gray-700">
-                    <strong>Análisis:</strong> El bajo desempeño en clases minoritarias (L1: 0 TP, L2: 4 TP, T12: 2 TP) indica que el desbalance extremo del dataset (L1=14, L2=10, T12=8 muestras) no fue completamente compensado por las técnicas de data augmentation y weighted sampling.
-                </p>
-            </div>
-        </div>
-
-        <!-- Métricas por Clase -->
-        <div class="overflow-x-auto">
-            <h3 class="text-xl font-bold text-gray-900 mb-4">Métricas Detalladas por Clase</h3>
-            <table class="w-full">
-                <thead>
-                    <tr class="bg-gray-100 border-b-2 border-gray-300">
-                        <th class="text-left py-3 px-4 font-semibold text-gray-700">Clase</th>
-                        <th class="text-center py-3 px-4 font-semibold text-gray-700">Precision</th>
-                        <th class="text-center py-3 px-4 font-semibold text-gray-700">Recall</th>
-                        <th class="text-center py-3 px-4 font-semibold text-gray-700">F1-Score</th>
-                        <th class="text-center py-3 px-4 font-semibold text-gray-700">TP/FP/FN</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    <tr class="hover:bg-gray-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">🎯 Hernia</td>
-                        <td class="py-3 px-4 text-center font-mono">61.5%</td>
-                        <td class="py-3 px-4 text-center font-mono">66.3%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-green-700">63.8%</td>
-                        <td class="py-3 px-4 text-center text-sm">118/74/60</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 bg-red-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">🔴 L1</td>
-                        <td class="py-3 px-4 text-center font-mono text-red-600">0.0%</td>
-                        <td class="py-3 px-4 text-center font-mono text-red-600">0.0%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-red-700">0.0%</td>
-                        <td class="py-3 px-4 text-center text-sm">0/2/12</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">🎯 L2</td>
-                        <td class="py-3 px-4 text-center font-mono">33.3%</td>
-                        <td class="py-3 px-4 text-center font-mono">40.0%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-orange-700">36.4%</td>
-                        <td class="py-3 px-4 text-center text-sm">4/8/6</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">L3</td>
-                        <td class="py-3 px-4 text-center font-mono">42.9%</td>
-                        <td class="py-3 px-4 text-center font-mono">30.0%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-orange-700">35.3%</td>
-                        <td class="py-3 px-4 text-center text-sm">6/8/14</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">L4</td>
-                        <td class="py-3 px-4 text-center font-mono">26.1%</td>
-                        <td class="py-3 px-4 text-center font-mono">40.0%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-orange-700">31.6%</td>
-                        <td class="py-3 px-4 text-center text-sm">12/34/18</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">L5</td>
-                        <td class="py-3 px-4 text-center font-mono">33.3%</td>
-                        <td class="py-3 px-4 text-center font-mono">28.6%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-orange-700">30.8%</td>
-                        <td class="py-3 px-4 text-center text-sm">16/32/40</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">S1</td>
-                        <td class="py-3 px-4 text-center font-mono">41.7%</td>
-                        <td class="py-3 px-4 text-center font-mono">35.7%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-yellow-700">38.5%</td>
-                        <td class="py-3 px-4 text-center text-sm">10/14/18</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50 bg-green-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">✅ Sin Hernia</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-green-600">80.0%</td>
-                        <td class="py-3 px-4 text-center font-mono">57.1%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-green-700">66.7%</td>
-                        <td class="py-3 px-4 text-center text-sm">16/4/12</td>
-                    </tr>
-                    <tr class="hover:bg-gray-50">
-                        <td class="py-3 px-4 font-medium text-gray-900">🎯 T12</td>
-                        <td class="py-3 px-4 text-center font-mono">33.3%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-green-600">100%</td>
-                        <td class="py-3 px-4 text-center font-mono font-bold text-green-700">50.0%</td>
-                        <td class="py-3 px-4 text-center text-sm">2/4/0</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Rendimiento -->
-        <div class="mt-8 grid md:grid-cols-2 gap-6">
-            <div class="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-xl p-6 border border-cyan-200">
-                <h3 class="text-lg font-bold text-white mb-4">⚡ Rendimiento de Inferencia</h3>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-cyan-100">Tiempo medio:</span>
-                        <span class="font-mono font-bold text-white">90.8 ms</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-cyan-100">FPS:</span>
-                        <span class="font-mono font-bold text-white">11.0</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-cyan-100">Dispositivo:</span>
-                        <span class="font-mono font-bold text-white">CUDA (GPU)</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl p-6 border border-teal-200">
-                <h3 class="text-lg font-bold text-white mb-4">📊 Configuración de Inferencia</h3>
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center">
-                        <span class="text-teal-100">Conf. Threshold:</span>
-                        <span class="font-mono font-bold text-white">0.25</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-teal-100">IoU Threshold:</span>
-                        <span class="font-mono font-bold text-white">0.50</span>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-teal-100">Max Detections:</span>
-                        <span class="font-mono font-bold text-white">150</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 7. Análisis Comparativo y Limitaciones -->
+    
+    <!-- 8. Análisis Comparativo y Limitaciones -->
     <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 section-card">
         <div class="flex items-center space-x-3 mb-6">
             <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
@@ -696,7 +704,6 @@ body.dark .bg-slate-600 .text-black {
             </div>
             <h2 class="text-3xl font-bold text-gray-900">7. Limitaciones y Consideraciones</h2>
         </div>
-
         <div class="space-y-4">
             <div class="bg-red-50 rounded-xl p-6 border-l-4 border-red-500">
                 <h3 class="font-bold text-red-900 mb-2">1. Dataset Extremadamente Pequeño</h3>
@@ -707,7 +714,6 @@ body.dark .bg-slate-600 .text-black {
                     <strong>Recomendado:</strong> 30-50 imágenes por millón de parámetros. Para 9 clases, se requerirían al menos 1000-1500 imágenes.
                 </p>
             </div>
-
             <div class="bg-orange-50 rounded-xl p-6 border-l-4 border-orange-500">
                 <h3 class="font-bold text-orange-900 mb-2">2. Desbalance Extremo de Clases</h3>
                 <p class="text-gray-700 mb-2">
@@ -717,7 +723,6 @@ body.dark .bg-slate-600 .text-black {
                     <strong>Impacto:</strong> A pesar del weighted sampling exponencial y copy-paste agresivo, la clase L1 tuvo 0 detecciones correctas en validación, evidenciando la insuficiencia de datos.
                 </p>
             </div>
-
             <div class="bg-yellow-50 rounded-xl p-6 border-l-4 border-yellow-500">
                 <h3 class="font-bold text-yellow-900 mb-2">3. Arquitectura Two-Stage vs One-Stage</h3>
                 <p class="text-gray-700 mb-2">
@@ -727,7 +732,6 @@ body.dark .bg-slate-600 .text-black {
                     <strong>Referencia:</strong> Lin et al. (2017) demostraron que RetinaNet (one-stage con Focal Loss) supera a Faster R-CNN en escenarios con desbalance severo.
                 </p>
             </div>
-
             <div class="bg-blue-50 rounded-xl p-6 border-l-4 border-blue-500">
                 <h3 class="font-bold text-blue-900 mb-2">4. Overfitting en Épocas Tardías</h3>
                 <p class="text-gray-700 mb-2">
@@ -738,7 +742,6 @@ body.dark .bg-slate-600 .text-black {
                 </p>
             </div>
         </div>
-
         <div class="mt-6 bg-green-50 rounded-xl p-6 border border-green-200">
             <h3 class="font-bold text-green-900 mb-2">✅ Logros a Pesar de las Limitaciones</h3>
             <p class="text-gray-700">
@@ -746,8 +749,7 @@ body.dark .bg-slate-600 .text-black {
             </p>
         </div>
     </div>
-
-    <!-- 8. Referencias Bibliográficas -->
+    <!-- 9. Referencias Bibliográficas -->
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 p-8 section-card">
         <div class="flex items-center space-x-3 mb-6">
             <div class="w-12 h-12 bg-gray-100 dark:bg-slate-700 rounded-xl flex items-center justify-center">
@@ -880,7 +882,7 @@ body.dark .bg-slate-600 .text-black {
             </div>
         </div>
     </div>
-    <!-- 9. Resumen Ejecutivo -->
+    <!-- 10. Resumen Ejecutivo -->
     <div class="bg-blue-600 dark:bg-blue-700 rounded-2xl shadow-xl p-8 text-white">
         <div class="flex items-center space-x-3 mb-6">
             <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
@@ -890,7 +892,6 @@ body.dark .bg-slate-600 .text-black {
             </div>
             <h2 class="text-3xl font-bold">9. Conclusiones</h2>
         </div>
-
         <div class="space-y-4">
             <div class="bg-white/10 rounded-xl p-6 backdrop-blur">
                 <h3 class="text-xl font-bold mb-3">Logros Principales</h3>
@@ -921,7 +922,6 @@ body.dark .bg-slate-600 .text-black {
                     </li>
                 </ul>
             </div>
-
             <div class="bg-white/10 rounded-xl p-6 backdrop-blur">
                 <h3 class="text-xl font-bold mb-3">Técnicas Clave Aplicadas</h3>
                 <div class="grid md:grid-cols-2 gap-3">
@@ -951,7 +951,6 @@ body.dark .bg-slate-600 .text-black {
                     </div>
                 </div>
             </div>
-
             <div class="bg-white/10 rounded-xl p-6 backdrop-blur">
                 <h3 class="text-xl font-bold mb-3">Desafíos y Aprendizajes</h3>
                 <p class="text-lg leading-relaxed mb-3">
@@ -961,7 +960,6 @@ body.dark .bg-slate-600 .text-black {
                     El bajo desempeño en clases minoritarias (<strong>F1=16.2%</strong>) confirma las recomendaciones de la literatura sobre la necesidad de datasets más grandes para detección multi-clase. Sin embargo, el <strong>63.8% F1-score en "Hernia"</strong> y <strong>66.7% en "Sin Hernia"</strong> demuestran la viabilidad del enfoque para las clases más relevantes clínicamente.
                 </p>
             </div>
-
             <div class="bg-white/10 rounded-xl p-6 backdrop-blur">
                 <h3 class="text-xl font-bold mb-3">Comparación: Two-Stage vs One-Stage</h3>
                 <p class="text-lg leading-relaxed">
@@ -970,22 +968,19 @@ body.dark .bg-slate-600 .text-black {
             </div>
         </div>
     </div>
-
     <!-- Footer con timestamp -->
     <div class="text-center text-gray-500 dark:text-gray-400 text-sm py-4">
         <p>Modelo entrenado: 2025-11-16 00:42:59</p>
         <p class="mt-1">Faster R-CNN ResNet50-FPN Optimized - 9 clases - 100 épocas</p>
         <p class="mt-1">Mejor Época: 65 | Val Loss: 0.4547 | Accuracy: 42.0%</p>
     </div>
-
 </div>
-
 <script>
-// Configuración de MathJax
+// Configuración de MathJax corregida para soportar $$ y \[ \] en display math, y $ en inline
 window.MathJax = {
     tex: {
-        inlineMath: [[', '], ['\\(', '\\)']],
-        displayMath: [['$', '$'], ['\\[', '\\]']],
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
         processEscapes: true,
         processEnvironments: true
     },
@@ -1005,7 +1000,6 @@ window.MathJax = {
         }
     }
 };
-
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function() {
     if (window.MathJax && MathJax.typesetPromise) {
@@ -1013,5 +1007,4 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-
 {% endblock %}
